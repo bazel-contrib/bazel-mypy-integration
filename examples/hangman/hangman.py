@@ -6,6 +6,7 @@ Demonstrates very basic Python typing.
 """
 
 import random
+from typing import Optional, List
 
 
 class HangMan(object):
@@ -29,7 +30,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
 
     infStr = '_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\''
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self) -> None:
         i, j = 2, 0
         self.pics.append(self.hang[:])
         for ls in self.man.values():
@@ -39,14 +40,19 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
                 j += 1
             self.pics.append(pic)
 
-    def pick_word(self):
+    def pick_word(self) -> str:
         return self.words[random.randint(0, len(self.words) - 1)]
 
-    def print_pic(self, idx):
+    def print_pic(self, idx) -> None:
         for line in self.pics[idx]:
             print(line)
 
-    def ask_and_evaluate(self, word, result, missed):
+    def ask_and_evaluate(
+        self,
+        word: List[str],
+        result: List[str],
+        missed: List[str]
+    ) -> (Optional[str], bool):
         guess = input()
         if guess is None or len(guess) != 1 or (guess in result) or (guess in missed):
             return None, False
@@ -58,7 +64,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
             i += 1
         return guess, right
 
-    def info(self, info):
+    def info(self, info: str) -> None:
         ln = len(self.infStr)
         print(self.infStr[:-3])
         print(info)
@@ -91,4 +97,5 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
             self.info('The word was \'' + ''.join(word) + '\' ! You\'ve just killed a man, yo !')
 
 
-HangMan().start()
+if __name__ == "__main__":
+    HangMan().start()
