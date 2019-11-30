@@ -6,11 +6,11 @@ Demonstrates very basic Python typing.
 """
 
 import random
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 
 class HangMan(object):
-    hang = [" +---+", " |   |", "     |", "     |", "     |", "     |", "======="]
+    hang: List[str] = [" +---+", " |   |", "     |", "     |", "     |", "     |", "======="]
 
     man = {}
     man[0] = [" 0   |"]
@@ -20,7 +20,7 @@ class HangMan(object):
     man[4] = [" 0   |", "/|\\  |", "/    |"]
     man[5] = [" 0   |", "/|\\  |", "/ \\  |"]
 
-    pics = []
+    pics: List[List[str]] = []
 
     words = """ant baboon badger bat bear beaver camel cat clam cobra cougar coyote
 crow deer dog donkey duck eagle ferret fox frog goat goose hawk lion lizard llama
@@ -49,7 +49,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra""".split()
 
     def ask_and_evaluate(
         self, word: List[str], result: List[str], missed: List[str]
-    ) -> (Optional[str], bool):
+    ) -> Tuple[Optional[str], bool]:
         guess = input()
         if guess is None or len(guess) != 1 or (guess in result) or (guess in missed):
             return None, False
