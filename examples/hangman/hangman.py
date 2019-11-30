@@ -10,25 +10,25 @@ from typing import Optional, List
 
 
 class HangMan(object):
-    hang = [' +---+', ' |   |', '     |', '     |', '     |', '     |', '=======']
+    hang = [" +---+", " |   |", "     |", "     |", "     |", "     |", "======="]
 
     man = {}
-    man[0] = [' 0   |']
-    man[1] = [' 0   |', ' |   |']
-    man[2] = [' 0   |', '/|   |']
-    man[3] = [' 0   |', '/|\\  |']
-    man[4] = [' 0   |', '/|\\  |', '/    |']
-    man[5] = [' 0   |', '/|\\  |', '/ \\  |']
+    man[0] = [" 0   |"]
+    man[1] = [" 0   |", " |   |"]
+    man[2] = [" 0   |", "/|   |"]
+    man[3] = [" 0   |", "/|\\  |"]
+    man[4] = [" 0   |", "/|\\  |", "/    |"]
+    man[5] = [" 0   |", "/|\\  |", "/ \\  |"]
 
     pics = []
 
-    words = '''ant baboon badger bat bear beaver camel cat clam cobra cougar coyote
+    words = """ant baboon badger bat bear beaver camel cat clam cobra cougar coyote
 crow deer dog donkey duck eagle ferret fox frog goat goose hawk lion lizard llama
 mole monkey moose mouse mule newt otter owl panda parrot pigeon python rabbit ram
 rat raven rhino salmon seal shark sheep skunk sloth snake spider stork swan tiger
-toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
+toad trout turkey turtle weasel whale wolf wombat zebra""".split()
 
-    infStr = '_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\'*-_-*\''
+    infStr = "_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'"
 
     def __init__(self) -> None:
         i, j = 2, 0
@@ -48,10 +48,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
             print(line)
 
     def ask_and_evaluate(
-        self,
-        word: List[str],
-        result: List[str],
-        missed: List[str]
+        self, word: List[str], result: List[str], missed: List[str]
     ) -> (Optional[str], bool):
         guess = input()
         if guess is None or len(guess) != 1 or (guess in result) or (guess in missed):
@@ -71,30 +68,30 @@ toad trout turkey turtle weasel whale wolf wombat zebra'''.split()
         print(self.infStr[3:])
 
     def start(self):
-        print('Welcome to Hangman !')
+        print("Welcome to Hangman !")
         word = list(self.pick_word())
-        result = list('*' * len(word))
-        print('The word is: ', result)
+        result = list("*" * len(word))
+        print("The word is: ", result)
         success, i, missed = False, 0, []
         while i < len(self.pics) - 1:
-            print('Guess the word: ', end='')
+            print("Guess the word: ", end="")
             guess, right = self.ask_and_evaluate(word, result, missed)
             if guess is None:
-                print('You\'ve already entered this character.')
+                print("You've already entered this character.")
                 continue
-            print(''.join(result))
+            print("".join(result))
             if result == word:
-                self.info('Congratulations ! You\'ve just saved a life !')
+                self.info("Congratulations ! You've just saved a life !")
                 success = True
                 break
             if not right:
                 missed.append(guess)
                 i += 1
             self.print_pic(i)
-            print('Missed characters: ', missed)
+            print("Missed characters: ", missed)
 
         if not success:
-            self.info('The word was \'' + ''.join(word) + '\' ! You\'ve just killed a man, yo !')
+            self.info("The word was '" + "".join(word) + "' ! You've just killed a man, yo !")
 
 
 if __name__ == "__main__":
