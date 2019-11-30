@@ -15,7 +15,8 @@ def _mypy_aspect_impl(target, ctx):
         # Iterate through the sources counting files
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
-                src_files.append(f)
+                if f.path.endswith(".py"):
+                    src_files.append(f)
                 if ctx.attr.extension == '*':
                     count = count + 1
 
@@ -24,6 +25,12 @@ def _mypy_aspect_impl(target, ctx):
         for dep in ctx.rule.attr.deps:
             count = count + dep[FileCountInfo].count
 
+    if not src_files:
+        return [
+            FileCountInfo(count = count),
+        ]
+
+    mypy_exe_path = "/Users/jonathonbelotti/.pyenv/shims/mypy"
     mypy_template_expanded_exe = ctx.actions.declare_file(
         "%s_mypy_exe" % ctx.rule.attr.name
     )
@@ -32,12 +39,12 @@ def _mypy_aspect_impl(target, ctx):
         template = ctx.file._template,
         output = mypy_template_expanded_exe,
         substitutions = {
-            "{MYPY_EXE}": "mypy",
+            "{MYPY_EXE}": mypy_exe_path,
             "{SRCS}": " ".join([
                 shell.quote(f.path) for
                 f in src_files
             ]),
-            "OUTPUT" : out.path
+            "{OUTPUT}" : out.path
         },
         is_executable = True,
     )
@@ -51,7 +58,12 @@ def _mypy_aspect_impl(target, ctx):
         use_default_shell_env = True,
     )
 
-    return [FileCountInfo(count = count)]
+    return [
+        FileCountInfo(count = count),
+        OutputGroupInfo(
+            foo = depset([out]),
+        )
+    ]
 
 mypy_aspect = aspect(implementation = _mypy_aspect_impl,
     attr_aspects = ['deps'],

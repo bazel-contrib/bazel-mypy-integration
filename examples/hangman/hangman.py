@@ -49,7 +49,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra""".split()
 
     def ask_and_evaluate(
         self, word: List[str], result: List[str], missed: List[str]
-    ) -> Tuple[Optional[str], bool]:
+    ) -> (Optional[str], bool):
         guess = input()
         if guess is None or len(guess) != 1 or (guess in result) or (guess in missed):
             return None, False
