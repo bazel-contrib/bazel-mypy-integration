@@ -50,6 +50,8 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 mypy==0.750
 ```
 
+⚠️ _Note: Currently only `0.750` (latest) is being supported, but the idea is to support multiple versions in future using the above mechanism._ 
+
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
 Next, add the following to your `WORKSPACE`:
