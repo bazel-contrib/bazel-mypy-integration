@@ -17,4 +17,49 @@ coming soon...
 
 ## Installation
 
-coming soon...
+Create a file that will specify the version of `mypy` to use. You will pass the Bazel label for
+this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`, which below is named
+`mypy_integration_deps(...)`:
+
+```
+mypy==0.750
+```
+
+(In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
+
+Next, add the following to your `WORKSPACE`:
+
+```python
+mypy_integration_version = "XXX"
+
+http_archive(
+    name = "mypy_integration",
+    # sha256 = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    strip_prefix = "bazel-linting-system-{version}".format(version = mypy_integration_version),
+    url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/v{version}.zip".format(
+        version = mypy_integration_version
+    ),
+)
+
+load(
+    "@mypy_integration//repositories:repositories.bzl",
+    mypy_integration_repositories = "repositories",
+)
+mypy_integration_repositories()
+
+load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
+
+mypy_integration_deps("//tools/typing:mypy_version.txt")
+
+load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
+
+pip_deps()
+```
+
+Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever
+Python code is built:
+
+```
+build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
+build --output_groups=+foo
+```
