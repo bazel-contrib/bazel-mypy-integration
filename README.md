@@ -11,8 +11,33 @@ With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` erro
 
 ## Usage
 
+It's highly recommended that you register this integration's [Aspect]() to run
+everytime you `build` Python. To do that you can add the following to your `.bazelrc`: 
+
 ```
-coming soon...
+build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
+build --output_groups=+foo
+```
+
+But if you want to invoke the integration directly, you can do so with:
+
+```
+bazel build --aspects @mypy_integration//:mypy.bzl%mypy_aspect --output_groups=foo  //my/python/code/...
+```
+
+If there's a typing error in your Python code, then your `build` will fail. You'll see something like:
+
+```bash
+ERROR: /Users/jonathonbelotti/Code/thundergolfer/bazel-mypy-integration/examples/hangman/BUILD:1:1: 
+MyPy hangman/hangman_dummy_out failed (Exit 1) hangman_mypy_exe failed: error executing command bazel-out/darwin-fastbuild/bin/hangman/hangman_mypy_exe
+
+Use --sandbox_debug to see verbose messages from the sandbox
+hangman/hangman.py:52: error: Syntax error in type annotation
+hangman/hangman.py:52: note: Suggestion: Use Tuple[T1, ..., Tn] instead of (T1, ..., Tn)
+Found 1 error in 1 file (checked 1 source file)
+INFO: Elapsed time: 2.026s, Critical Path: 1.85s
+INFO: 1 process: 1 darwin-sandbox.
+FAILED: Build did NOT complete successfully
 ```
 
 ## Installation
