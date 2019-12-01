@@ -9,7 +9,7 @@ main() {
 
   # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
 
-  {MYPY_EXE} --bazel --package-root . {SRCS} 2>&1 | tee "${output}"
+  {MYPY_EXE} {VERBOSE_OPT} --bazel --package-root . --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1 | tee "${output}"
 }
 
 main "$@"

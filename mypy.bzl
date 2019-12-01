@@ -6,6 +6,18 @@ FileCountInfo = provider(
     }
 )
 
+DEBUG = True
+
+def _sources_to_cache_map_triples(srcs):
+    triples_as_flat_list = []
+    for f in srcs:
+        triples_as_flat_list.extend([
+            shell.quote(f.path),
+            shell.quote("{}.meta.json".format(f.path)),
+            shell.quote("{}.data.json".format(f.path))
+        ])
+    return triples_as_flat_list
+
 def _mypy_aspect_impl(target, ctx):
     print("running mypy aspect")
     count = 0
@@ -40,11 +52,13 @@ def _mypy_aspect_impl(target, ctx):
         output = mypy_template_expanded_exe,
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
+            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
             "{SRCS}": " ".join([
                 shell.quote(f.path) for
                 f in src_files
             ]),
-            "{OUTPUT}" : out.path
+            "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
+            "{OUTPUT}" : out.path,
         },
         is_executable = True,
     )
