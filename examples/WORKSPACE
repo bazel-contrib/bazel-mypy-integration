@@ -3,10 +3,29 @@ workspace(name = "examples")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
+
+########################
+# MYPY SUPPORT
+########################
+
 local_repository(
     name = "mypy_integration",
     path = "../"
 )
+
+load(
+    "@mypy_integration//repositories:repositories.bzl",
+    mypy_integration_repositories = "repositories",
+)
+mypy_integration_repositories()
+
+load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
+
+mypy_integration_deps("//tools/typing:mypy_version.txt")
+
+load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
+
+pip_deps()
 
 ########################
 # PYTHON SUPPORT

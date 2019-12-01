@@ -5,11 +5,11 @@ set -o nounset
 set -o pipefail
 
 main() {
-  echo "fuck"
-
   local output="{OUTPUT}"
 
-  {MYPY_EXE} --bazel --package-root . {SRCS} > "${output}"
+  # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
+
+  {MYPY_EXE} --bazel --package-root . {SRCS} 2>&1 | tee "${output}"
 }
 
 main "$@"

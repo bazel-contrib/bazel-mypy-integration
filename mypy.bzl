@@ -39,7 +39,7 @@ def _mypy_aspect_impl(target, ctx):
         template = ctx.file._template,
         output = mypy_template_expanded_exe,
         substitutions = {
-            "{MYPY_EXE}": mypy_exe_path,
+            "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{SRCS}": " ".join([
                 shell.quote(f.path) for
                 f in src_files
@@ -52,6 +52,7 @@ def _mypy_aspect_impl(target, ctx):
     ctx.actions.run(
         outputs = [out],
         inputs = src_files,
+        tools = [ctx.executable._mypy_cli],
         executable = mypy_template_expanded_exe,
 #        arguments = ["{}/{}".format(ctx.label.package, prefix)] + pairs,
         mnemonic = "MyPy",
@@ -68,13 +69,20 @@ def _mypy_aspect_impl(target, ctx):
 mypy_aspect = aspect(implementation = _mypy_aspect_impl,
     attr_aspects = ['deps'],
     attrs = {
-        'extension' : attr.string(
+        # TODO(Jonathon): Remove this, it's vestigial
+        "extension" : attr.string(
             default = "*",
             values = ["*", ".py"]
         ),
-        '_template' : attr.label(
-            default = Label('@mypy_integration//templates:mypy.sh.tpl'),
+        "_template" : attr.label(
+            default = Label("@mypy_integration//templates:mypy.sh.tpl"),
             allow_single_file = True,
         ),
+        "_mypy_cli": attr.label(
+            default = Label("@mypy_integration//mypy"),
+            executable = True,
+            cfg = "host",
+        )
+
     }
 )

@@ -1,4 +1,4 @@
-load("@my_deps//:requirements.bzl", "requirement")
+load("@mypy_integration_pip_deps//:requirements.bzl", "requirement")
 
 py_binary(
     name = "mypy",
@@ -10,5 +10,7 @@ py_binary(
         requirement("typing_extensions"),
         requirement("mypy_extensions"),
         requirement("typed_ast"),
-    ]
+    ],
+    visibility = ["//visibility:public"],
+    python_version = "PY3",
 )
