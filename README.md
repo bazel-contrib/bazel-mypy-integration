@@ -57,13 +57,13 @@ mypy==0.750
 Next, add the following to your `WORKSPACE`:
 
 ```python
-mypy_integration_version = "XXX"
+mypy_integration_version = "0.0.1" # latest @ Dec 1st 2019
 
 http_archive(
     name = "mypy_integration",
-    # sha256 = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    sha256 = "00ec35a947d6554de01e1af137a5f5708f210f24404054b8ddb7b80ec9f04e17", # for 0.0.1
     strip_prefix = "bazel-linting-system-{version}".format(version = mypy_integration_version),
-    url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/v{version}.zip".format(
+    url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.zip".format(
         version = mypy_integration_version
     ),
 )
