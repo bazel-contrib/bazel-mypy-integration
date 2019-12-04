@@ -46,7 +46,7 @@ FAILED: Build did NOT complete successfully
 
 ## Installation
 
-Create a file that will specify the version of `mypy` to use. You will pass the Bazel label for
+**1. Create a file that will specify the version of `mypy` to use.** You will pass the Bazel label for
 this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`, which below is named
 `mypy_integration_deps(...)`:
 
@@ -58,7 +58,7 @@ mypy==0.750
 
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
-Next, add the following to your `WORKSPACE`:
+**2. Next, add the following to your `WORKSPACE`:**
 
 ```python
 mypy_integration_version = "0.0.1" # latest @ Dec 1st 2019
@@ -87,8 +87,8 @@ load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
 pip_deps()
 ```
 
-Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever
-Python code is built:
+**3. Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever
+Python code is built:**
 
 ```
 build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
