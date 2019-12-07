@@ -1,11 +1,5 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
 
-FileCountInfo = provider(
-    fields = {
-        'count' : 'number of files'
-    }
-)
-
 DEBUG = True
 
 def _sources_to_cache_map_triples(srcs):
@@ -19,28 +13,24 @@ def _sources_to_cache_map_triples(srcs):
     return triples_as_flat_list
 
 def _mypy_aspect_impl(target, ctx):
-    print("running mypy aspect")
-    count = 0
+    if ctx.rule.kind not in ["py_binary", "py_library", "py_test"]:
+        return []
+
     # Make sure the rule has a srcs attribute.
     src_files = []
     if hasattr(ctx.rule.attr, 'srcs'):
-        # Iterate through the sources counting files
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
                 if f.path.endswith(".py"):
                     src_files.append(f)
-                if ctx.attr.extension == '*':
-                    count = count + 1
 
-    # TODO(Jonathon): Remove
+    # TODO(Jonathon): Need to include deps in MyPy call for type-checking
     if hasattr(ctx.rule.attr, 'deps'):
         for dep in ctx.rule.attr.deps:
-            count = count + dep[FileCountInfo].count
+            pass
 
     if not src_files:
-        return [
-            FileCountInfo(count = count),
-        ]
+        return []
 
     mypy_template_expanded_exe = ctx.actions.declare_file(
         "%s_mypy_exe" % ctx.rule.attr.name
@@ -73,7 +63,6 @@ def _mypy_aspect_impl(target, ctx):
     )
 
     return [
-        FileCountInfo(count = count),
         OutputGroupInfo(
             foo = depset([out]),
         )
