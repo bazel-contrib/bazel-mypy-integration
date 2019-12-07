@@ -22,3 +22,4 @@ def py_deps(mypy_requirements_file):
             requirements = mypy_requirements_file,
             python_interpreter = "python3", # mypy requires Python3
         )
+        print("fuck fuck fuck")
