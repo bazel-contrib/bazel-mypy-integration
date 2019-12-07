@@ -42,7 +42,6 @@ def _mypy_aspect_impl(target, ctx):
             FileCountInfo(count = count),
         ]
 
-    mypy_exe_path = "/Users/jonathonbelotti/.pyenv/shims/mypy"
     mypy_template_expanded_exe = ctx.actions.declare_file(
         "%s_mypy_exe" % ctx.rule.attr.name
     )
