@@ -15,9 +15,12 @@ def _sources_to_cache_map_triples(srcs):
         ])
     return triples_as_flat_list
 
+
 def _mypy_aspect_impl(target, ctx):
     if ctx.rule.kind not in ["py_binary", "py_library", "py_test"]:
         return []
+
+    mypy_config_file = ctx.file._mypy_config
 
     # Make sure the rule has a srcs attribute.
     src_files = []
@@ -101,7 +104,10 @@ mypy_aspect = aspect(implementation = _mypy_aspect_impl,
             default = Label("@mypy_integration//mypy"),
             executable = True,
             cfg = "host",
-        )
-
+        ),
+        "_mypy_config": attr.label(
+            default = Label("@mypy_integration//:mypy.ini"),
+            allow_single_file = True,
+        ),
     }
 )
