@@ -78,6 +78,10 @@ load(
 )
 mypy_integration_repositories()
 
+# Optionally pass a MyPy config file.
+load("@mypy_integration//:config.bzl", "mypy_configuration")
+mypy_configuration("//tools/typing:mypy.ini")
+
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps("//tools/typing:mypy_version.txt")
