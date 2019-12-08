@@ -27,7 +27,10 @@ def _mypy_aspect_impl(target, ctx):
                 if f.extension in VALID_EXTENSIONS:
                     src_files.append(f)
 
+    mypypath = None
+
     # TODO(Jonathon): Need to include deps in MyPy call for type-checking
+    stub_files = []
     if hasattr(ctx.rule.attr, 'deps'):
         # Need to add the .py files AND the .pyi files that are
         # deps of the rule
@@ -39,7 +42,8 @@ def _mypy_aspect_impl(target, ctx):
                             print(dir(src_f))
                             print(src_f.path)
                             print(src_f.extension)
-                            src_files.append(src_f)
+                            mypypath = src_f.dirname
+                            stub_files.append(src_f)
 
     if not src_files:
         return []
@@ -59,14 +63,15 @@ def _mypy_aspect_impl(target, ctx):
                 f in src_files
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
-            "{OUTPUT}" : out.path,
+            "{OUTPUT}": out.path,
+            "{MYPYPATH_PATH}": mypypath if mypypath else "",
         },
         is_executable = True,
     )
 
     ctx.actions.run(
         outputs = [out],
-        inputs = src_files,
+        inputs = src_files + stub_files,
         tools = [ctx.executable._mypy_cli],
         executable = mypy_template_expanded_exe,
 #        arguments = ["{}/{}".format(ctx.label.package, prefix)] + pairs,

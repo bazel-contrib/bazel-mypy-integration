@@ -12,8 +12,9 @@ def parse_name(text: str) -> str:
     for pattern in patterns:
         result = parse.parse(pattern, text)
         if result:
-            # return result["name"]
-            return result
+            # Switch the commented out return statements to test functionality of the integration
+            return result["name"]  # correct
+            # return result  # type-error
     return ""
 
 

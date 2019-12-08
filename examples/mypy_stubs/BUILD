@@ -6,17 +6,11 @@ mypy_stubs(
     srcs = glob(["stubs/*.pyi"]),
 )
 
-mypy_stubs(
-    name = "parse_name_stubs",
-    srcs = glob(["*.pyi"]),
-)
-
 py_binary(
     name = "parse_name",
     srcs = glob(["*.py"]),
     deps = [
         ":stubs",
-        ":parse_name_stubs",
         requirement("parse"),
     ],
     main = "parse_name.py",
