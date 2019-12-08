@@ -4,7 +4,11 @@ to this integration.
 """
 
 def _create_config_impl(ctx):
-    user_mypy_config_contents= ctx.read(ctx.attr.config_filepath)
+    if ctx.attr.config_filepath:
+        user_mypy_config_contents = ctx.read(ctx.attr.config_filepath)
+    else:
+        user_mypy_config_contents = ""
+
     print("this is from create config impl")
     ctx.file(
         "mypy.ini",
