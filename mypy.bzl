@@ -1,6 +1,9 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("//:rules.bzl", "MyPyStubsInfo")
 
 DEBUG = True
+
+VALID_EXTENSIONS = ["py", "pyi"]
 
 def _sources_to_cache_map_triples(srcs):
     triples_as_flat_list = []
@@ -21,13 +24,22 @@ def _mypy_aspect_impl(target, ctx):
     if hasattr(ctx.rule.attr, 'srcs'):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
-                if f.path.endswith(".py"):
+                if f.extension in VALID_EXTENSIONS:
                     src_files.append(f)
 
     # TODO(Jonathon): Need to include deps in MyPy call for type-checking
     if hasattr(ctx.rule.attr, 'deps'):
+        # Need to add the .py files AND the .pyi files that are
+        # deps of the rule
         for dep in ctx.rule.attr.deps:
-            pass
+            if MyPyStubsInfo in dep:
+                for stub_srcs_target in dep[MyPyStubsInfo].srcs:
+                    for src_f in stub_srcs_target.files.to_list():
+                        if src_f.extension == "pyi":
+                            print(dir(src_f))
+                            print(src_f.path)
+                            print(src_f.extension)
+                            src_files.append(src_f)
 
     if not src_files:
         return []
