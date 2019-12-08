@@ -21,7 +21,7 @@ mypy_integration_repositories()
 
 load("@mypy_integration//:config.bzl", "mypy_configuration")
 
-mypy_configuration()
+mypy_configuration("BLAH")
 
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 

@@ -68,13 +68,14 @@ def _mypy_aspect_impl(target, ctx):
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{OUTPUT}": out.path,
             "{MYPYPATH_PATH}": mypypath if mypypath else "",
+            "{MYPY_INI_PATH}": mypy_config_file.path
         },
         is_executable = True,
     )
 
     ctx.actions.run(
         outputs = [out],
-        inputs = src_files + stub_files,
+        inputs = src_files + stub_files + [mypy_config_file],
         tools = [ctx.executable._mypy_cli],
         executable = mypy_template_expanded_exe,
 #        arguments = ["{}/{}".format(ctx.label.package, prefix)] + pairs,
@@ -106,7 +107,7 @@ mypy_aspect = aspect(implementation = _mypy_aspect_impl,
             cfg = "host",
         ),
         "_mypy_config": attr.label(
-            default = Label("@mypy_integration//:mypy.ini"),
+            default = Label("@mypy_integration_config//:mypy.ini"),
             allow_single_file = True,
         ),
     }

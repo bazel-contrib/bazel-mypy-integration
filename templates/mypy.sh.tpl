@@ -13,7 +13,11 @@ main() {
 
   echo "${MYPYPATH}"
 
-  {MYPY_EXE} {VERBOSE_OPT} --bazel --package-root . --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1 | tee "${output}"
+  {MYPY_EXE} {VERBOSE_OPT} \
+    --bazel \
+    --package-root . \
+    --config-file {MYPY_INI_PATH} \
+    --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1 | tee "${output}"
 }
 
 main "$@"

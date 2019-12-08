@@ -3,7 +3,6 @@ Provides functions to support (optionally) passing the MyPy configuration file
 to this integration.
 """
 
-
 def _create_config_impl(ctx):
     print(ctx.attr.config_filepath)
     print("this is from create config impl")
@@ -11,6 +10,11 @@ def _create_config_impl(ctx):
         "mypy.ini",
         content='FUCK',
         executable=False
+    )
+    ctx.file(
+        "BUILD",
+        content="exports_files(['mypy.ini'])",
+        executable=False,
     )
 
 create_config = repository_rule(
@@ -26,6 +30,6 @@ create_config = repository_rule(
 
 def mypy_configuration(mypy_config_file=None):
     create_config(
-        name = "mypy_config",
+        name = "mypy_integration_config",
         config_filepath=mypy_config_file,
     )
