@@ -4,11 +4,11 @@ to this integration.
 """
 
 def _create_config_impl(ctx):
-    print(ctx.attr.config_filepath)
+    user_mypy_config_contents= ctx.read(ctx.attr.config_filepath)
     print("this is from create config impl")
     ctx.file(
         "mypy.ini",
-        content='FUCK',
+        content=user_mypy_config_contents,
         executable=False
     )
     ctx.file(
