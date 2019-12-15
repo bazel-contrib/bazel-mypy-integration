@@ -9,7 +9,7 @@ You can run the integration over the whole workspace by running:
 ```
 bazel build \
     --aspects @mypy_integration//:mypy.bzl%mypy_aspect \
-     --output_groups=foo //...
+     --output_groups=mypy //...
 ```
 
 This workspace defines its **MyPy version** in [`//tools/typing:mypy_version.txt`](./tools/typing/mypy_version.txt)

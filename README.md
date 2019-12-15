@@ -20,13 +20,13 @@ everytime you `build` Python code. To do that you can add the following to your 
 
 ```
 build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
-build --output_groups=+foo
+build --output_groups=+mypy
 ```
 
 But if you want to invoke the integration directly, you can do so with:
 
 ```
-bazel build --aspects @mypy_integration//:mypy.bzl%mypy_aspect --output_groups=foo  //my/python/code/...
+bazel build --aspects @mypy_integration//:mypy.bzl%mypy_aspect --output_groups=mypy  //my/python/code/...
 ```
 
 If there's a typing error in your Python code, then your `build` will fail. You'll see something like:
@@ -96,7 +96,7 @@ Python code is built:**
 
 ```
 build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
-build --output_groups=+foo
+build --output_groups=+mypy
 ```
 
 ### Configuration

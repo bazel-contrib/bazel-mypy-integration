@@ -1,7 +1,9 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
 load("//:rules.bzl", "MyPyStubsInfo")
 
-DEBUG = True
+# Switch to True only during debugging and development.
+# All releases should have this as False.
+DEBUG = False
 
 VALID_EXTENSIONS = ["py", "pyi"]
 
@@ -42,9 +44,6 @@ def _mypy_aspect_impl(target, ctx):
                 for stub_srcs_target in dep[MyPyStubsInfo].srcs:
                     for src_f in stub_srcs_target.files.to_list():
                         if src_f.extension == "pyi":
-                            print(dir(src_f))
-                            print(src_f.path)
-                            print(src_f.extension)
                             mypypath = src_f.dirname
                             stub_files.append(src_f)
 
@@ -78,25 +77,19 @@ def _mypy_aspect_impl(target, ctx):
         inputs = src_files + stub_files + [mypy_config_file],
         tools = [ctx.executable._mypy_cli],
         executable = mypy_template_expanded_exe,
-#        arguments = ["{}/{}".format(ctx.label.package, prefix)] + pairs,
         mnemonic = "MyPy",
         use_default_shell_env = True,
     )
 
     return [
         OutputGroupInfo(
-            foo = depset([out]),
+            mypy = depset([out]),
         )
     ]
 
 mypy_aspect = aspect(implementation = _mypy_aspect_impl,
     attr_aspects = ['deps'],
     attrs = {
-        # TODO(Jonathon): Remove this, it's vestigial
-        "extension" : attr.string(
-            default = "*",
-            values = ["*", ".py"]
-        ),
         "_template" : attr.label(
             default = Label("//templates:mypy.sh.tpl"),
             allow_single_file = True,
