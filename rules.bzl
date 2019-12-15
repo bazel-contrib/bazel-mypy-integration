@@ -6,10 +6,6 @@ MyPyStubsInfo = provider(
 
 
 def _mypy_stubs_impl(ctx):
-#    print(ctx.attr.srcs)
-#    print(ctx.attr.srcs[0])
-#    print(type(ctx.attr.srcs[0]))
-
     pyi_srcs = []
     for target in ctx.attr.srcs:
         pyi_srcs.extend(target.files.to_list())
