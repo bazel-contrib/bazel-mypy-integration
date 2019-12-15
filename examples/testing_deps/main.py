@@ -2,6 +2,7 @@ from typing import List
 
 from testing_deps.foo.fizz import fizz_filterer
 from testing_deps.bar.boo import boo_func
+from util.util import flatten_lists
 
 
 def main() -> None:
@@ -27,6 +28,9 @@ def main() -> None:
     # boo_func(another_list)
     # This isn't
     boo_func([str(x) for x in another_list])
+
+    x: List[int] = flatten_lists([[1, 1], [2]])
+    print(x)
 
 
 if __name__ == "__main__":
