@@ -46,6 +46,10 @@ def _mypy_aspect_impl(target, ctx):
                         if src_f.extension == "pyi":
                             mypypath = src_f.dirname
                             stub_files.append(src_f)
+            elif PyInfo in dep:
+                # NOTE(Jonathon): Try defer calling .to_list() if possible. (Probably isn't possible)
+                for src_f in dep[PyInfo].transitive_sources.to_list():
+                    src_files.append(src_f)
 
     if not src_files:
         return []
