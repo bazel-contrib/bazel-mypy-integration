@@ -9,7 +9,6 @@ def _create_config_impl(ctx):
     else:
         user_mypy_config_contents = ""
 
-    print("this is from create config impl")
     ctx.file(
         "mypy.ini",
         content=user_mypy_config_contents,
