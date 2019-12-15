@@ -2,6 +2,24 @@ workspace(name = "bazel_mypy_integration")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+load(
+    "//repositories:repositories.bzl",
+    mypy_integration_repositories = "repositories",
+)
+mypy_integration_repositories()
+
+load("//:config.bzl", "mypy_configuration")
+
+mypy_configuration()
+
+load("//repositories:deps.bzl", mypy_integration_deps = "deps")
+
+mypy_integration_deps("//:current_mypy_version.txt")
+
+load("//repositories:pip_repositories.bzl", "pip_deps")
+
+pip_deps()
+
 ########################
 # PYTHON SUPPORT
 ########################

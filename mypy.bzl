@@ -98,11 +98,11 @@ mypy_aspect = aspect(implementation = _mypy_aspect_impl,
             values = ["*", ".py"]
         ),
         "_template" : attr.label(
-            default = Label("@mypy_integration//templates:mypy.sh.tpl"),
+            default = Label("//templates:mypy.sh.tpl"),
             allow_single_file = True,
         ),
         "_mypy_cli": attr.label(
-            default = Label("@mypy_integration//mypy"),
+            default = Label("//mypy"),
             executable = True,
             cfg = "host",
         ),
