@@ -66,7 +66,7 @@ mypy_integration_version = "0.0.1" # latest @ Dec 1st 2019
 http_archive(
     name = "mypy_integration",
     sha256 = "00ec35a947d6554de01e1af137a5f5708f210f24404054b8ddb7b80ec9f04e17", # for 0.0.1
-    strip_prefix = "bazel-linting-system-{version}".format(version = mypy_integration_version),
+    strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
     url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.zip".format(
         version = mypy_integration_version
     ),
