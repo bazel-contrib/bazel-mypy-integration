@@ -24,7 +24,9 @@ def main() -> None:
 
     another_list: List[int] = [1, 10, 100]
     # This below is a typing violation.
-    boo_func(another_list)
+    # boo_func(another_list)
+    # This isn't
+    boo_func([str(x) for x in another_list])
 
 
 if __name__ == "__main__":
