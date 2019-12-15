@@ -3,7 +3,8 @@ from typing import List
 from testing_deps.foo.fizz import fizz_filterer
 from testing_deps.bar.boo import boo_func
 
-def main():
+
+def main() -> None:
     my_list = [
         "Applesauce",
         "Car",
