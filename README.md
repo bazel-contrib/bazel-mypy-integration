@@ -78,8 +78,8 @@ load(
 )
 mypy_integration_repositories()
 
-# Optionally pass a MyPy config file.
 load("@mypy_integration//:config.bzl", "mypy_configuration")
+# Optionally pass a MyPy config file, otherwise pass no argument.
 mypy_configuration("//tools/typing:mypy.ini")
 
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
@@ -111,3 +111,12 @@ mypy_configuration("//tools/typing:mypy.ini")
 ```
 
 where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readthedocs.io/en/latest/config_file.html#config-file-format).
+
+
+## 🛠 Development
+
+### Testing 
+
+`./test.sh` runs some basic integration tests. Right now, running the integration in the
+Bazel workspace in `examples/` tests a lot more functionality but can't automatically
+test failure cases.
