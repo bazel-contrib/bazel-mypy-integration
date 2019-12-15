@@ -98,3 +98,16 @@ Python code is built:**
 build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
 build --output_groups=+foo
 ```
+
+### Configuration
+
+To support the [MyPy configuration file](https://mypy.readthedocs.io/en/latest/config_file.html) you can add the
+following to your `WORKSPACE`:
+
+```
+load("@mypy_integration//:config.bzl", "mypy_configuration")
+
+mypy_configuration("//tools/typing:mypy.ini")
+```
+
+where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readthedocs.io/en/latest/config_file.html#config-file-format).
