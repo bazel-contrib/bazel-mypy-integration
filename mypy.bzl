@@ -17,6 +17,8 @@ def _sources_to_cache_map_triples(srcs):
         ])
     return triples_as_flat_list
 
+def _is_external_dep(dep):
+    return dep.label.workspace_root.startswith("external/")
 
 def _mypy_aspect_impl(target, ctx):
     if ctx.rule.kind not in ["py_binary", "py_library", "py_test"]:
@@ -46,7 +48,7 @@ def _mypy_aspect_impl(target, ctx):
                         if src_f.extension == "pyi":
                             mypypath = src_f.dirname
                             stub_files.append(src_f)
-            elif PyInfo in dep:
+            elif PyInfo in dep and not _is_external_dep(dep):
                 # NOTE(Jonathon): Try defer calling .to_list() if possible. (Probably isn't possible)
                 for src_f in dep[PyInfo].transitive_sources.to_list():
                     src_files.append(src_f)
