@@ -62,6 +62,25 @@ pip_import(   # or pip3_import
 load("@my_deps//:requirements.bzl", "pip_install")
 pip_install()
 
+# THIRD-PARTY PYTHON
+########################
+
+rules_python_external_version = "0e24cd9e051da859745c99e6fe31c833607898b6"
+
+http_archive(
+    name = "rules_python_external",
+    sha256 = "53d938572503e46fd1fe5023c804e3e6ed4dafd5d1f0a03203bfc5e62d8a89db",
+    strip_prefix = "rules_python_external-{version}".format(version = rules_python_external_version),
+    url = "https://github.com/dillon-giacoppo/rules_python_external/archive/{version}.zip".format(version = rules_python_external_version),
+)
+
+load("@rules_python_external//:defs.bzl", "pip_repository")
+
+pip_repository(
+    name = "my_deps",
+    requirements = "//third_party:requirements.txt",
+)
+
 ########################
 # OTHER
 ########################
