@@ -7,7 +7,7 @@ def _create_config_impl(ctx):
     if ctx.attr.config_filepath:
         user_mypy_config_contents = ctx.read(ctx.attr.config_filepath)
     else:
-        user_mypy_config_contents = ""
+        user_mypy_config_contents = "[mypy]"
 
     ctx.file(
         "mypy.ini",

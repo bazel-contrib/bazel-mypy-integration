@@ -20,6 +20,9 @@ def _sources_to_cache_map_triples(srcs):
 def _is_external_dep(dep):
     return dep.label.workspace_root.startswith("external/")
 
+def _is_external_src(src_file):
+    return src_file.path.startswith("external/")
+
 def _mypy_aspect_impl(target, ctx):
     if ctx.rule.kind not in ["py_binary", "py_library", "py_test"]:
         return []
@@ -27,17 +30,19 @@ def _mypy_aspect_impl(target, ctx):
     mypy_config_file = ctx.file._mypy_config
 
     # Make sure the rule has a srcs attribute.
-    src_files = []
+    direct_src_files = []
     if hasattr(ctx.rule.attr, 'srcs'):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
                 if f.extension in VALID_EXTENSIONS:
-                    src_files.append(f)
+                    direct_src_files.append(f)
 
+    direct_src_files_depset = depset(direct=direct_src_files)
     mypypath = None
 
     # TODO(Jonathon): Need to include deps in MyPy call for type-checking
     stub_files = []
+    transitive_srcs_depsets = []
     if hasattr(ctx.rule.attr, 'deps'):
         # Need to add the .py files AND the .pyi files that are
         # deps of the rule
@@ -49,10 +54,10 @@ def _mypy_aspect_impl(target, ctx):
                             mypypath = src_f.dirname
                             stub_files.append(src_f)
             elif PyInfo in dep and not _is_external_dep(dep):
-                # NOTE(Jonathon): Try defer calling .to_list() if possible. (Probably isn't possible)
-                for src_f in dep[PyInfo].transitive_sources.to_list():
-                    src_files.append(src_f)
+                transitive_srcs_depsets.append(dep[PyInfo].transitive_sources)
 
+    final_srcs_depset = depset(transitive = transitive_srcs_depsets + [direct_src_files_depset])
+    src_files = [f for f in final_srcs_depset.to_list() if not _is_external_src(f)]
     if not src_files:
         return []
 
