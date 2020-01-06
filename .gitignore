@@ -104,7 +104,36 @@ venv.bak/
 .mypy_cache/
 
 # bazel
+.ijwb/.blaze/*
 bazel-*
 
 # Intellij
 .idea
+# Libraries and modules are generated from Bazel, so only code style,
+# inspection profiles etc are checked in.
+**/.idea/.name
+**/.idea/artifacts/*
+**/.idea/codeStyles
+**/.idea/compiler.xml
+**/.idea/dictionaries/*
+**/.idea/encodings.xml
+**/.idea/gradle.xml
+**/.idea/hydra.xml
+**/.idea/jsLibraryMappings.xml
+**/.idea/kotlinc.xml
+**/.idea/misc.xml
+**/.idea/modules.xml
+**/.idea/sqldialects.xml
+**/.idea/tasks.xml
+**/.idea/uiDesigner.xml
+**/.idea/workspace.xml
+**/.idea/libraries/*
+**/.idea/sbt.xml
+**/.idea/scala_compiler.xml
+**/.idea/shelf/*
+**/.idea/atlassian-ide-plugin.xml
+**/.idea/deployment.xml
+**/.idea/eslintPlugin.xml
+**/.idea/watcherTasks.xml
+**/.idea/play2_project_settings.xml
+*.iml
