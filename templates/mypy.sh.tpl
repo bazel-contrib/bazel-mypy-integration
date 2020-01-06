@@ -9,9 +9,9 @@ main() {
 
   # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
 
-  export MYPYPATH="{MYPYPATH_PATH}"
+  export MYPYPATH="$(pwd):{MYPYPATH_PATH}"
 
-  echo "${MYPYPATH}"
+  echo "MYPYPATH: ${MYPYPATH}"
 
   {MYPY_EXE} {VERBOSE_OPT} \
     --bazel \
