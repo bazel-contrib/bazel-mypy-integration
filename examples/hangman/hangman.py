@@ -43,7 +43,7 @@ toad trout turkey turtle weasel whale wolf wombat zebra""".split()
     def pick_word(self) -> str:
         return self.words[random.randint(0, len(self.words) - 1)]
 
-    def print_pic(self, idx) -> None:
+    def print_pic(self, idx: int) -> None:
         for line in self.pics[idx]:
             print(line)
 
@@ -67,12 +67,13 @@ toad trout turkey turtle weasel whale wolf wombat zebra""".split()
         print(info)
         print(self.infStr[3:])
 
-    def start(self):
+    def start(self) -> None:
         print("Welcome to Hangman !")
         word = list(self.pick_word())
         result = list("*" * len(word))
         print("The word is: ", result)
-        success, i, missed = False, 0, []
+        success, i = False, 0
+        missed: List[str] = []
         while i < len(self.pics) - 1:
             print("Guess the word: ", end="")
             guess, right = self.ask_and_evaluate(word, result, missed)
