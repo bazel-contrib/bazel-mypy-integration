@@ -121,7 +121,7 @@ where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readt
 Bazel workspace in `examples/` tests a lot more functionality but can't automatically
 test failure cases.
 
-## 🏭 Adopters
+## Adopters
 
 Here's a (non-exhaustive) list of companies that use `bazel-mypy-integration` in production. Don't see yours? [You can add it in a PR](https://github.com/thundergolfer/bazel-mypy-integration/edit/master/README.md)!
 
