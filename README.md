@@ -4,7 +4,7 @@ _Integrate [MyPy](https://github.com/python/mypy) type-checking into your Python
 
 -----
 
-⚠️ This software is in the **ALPHA PHASE** and under active development. Please give it a try, and ⭐️ or watch the repo to follow progress ⚠️
+⚠️ This software is [now in 'production' use](#adopters), but still in the **PRE-RELEASE PHASE** and under active development. Please give it a try, and ⭐️ or watch the repo to follow progress ⚠️
 
 -----
 
