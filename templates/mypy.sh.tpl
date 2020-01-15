@@ -11,8 +11,6 @@ main() {
 
   export MYPYPATH="$(pwd):{MYPYPATH_PATH}"
 
-  echo "MYPYPATH: ${MYPYPATH}"
-
   {MYPY_EXE} {VERBOSE_OPT} \
     --bazel \
     --package-root . \
