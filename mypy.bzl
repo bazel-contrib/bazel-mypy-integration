@@ -40,7 +40,6 @@ def _mypy_aspect_impl(target, ctx):
     direct_src_files_depset = depset(direct=direct_src_files)
     mypypath = None
 
-    # TODO(Jonathon): Need to include deps in MyPy call for type-checking
     stub_files = []
     transitive_srcs_depsets = []
     if hasattr(ctx.rule.attr, 'deps'):
