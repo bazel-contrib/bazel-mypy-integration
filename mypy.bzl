@@ -24,7 +24,8 @@ def _is_external_src(src_file):
     return src_file.path.startswith("external/")
 
 def _mypy_aspect_impl(target, ctx):
-    if ctx.rule.kind not in ["py_binary", "py_library", "py_test"]:
+    if (ctx.rule.kind not in ["py_binary", "py_library", "py_test"] or
+        ctx.label.workspace_root.startswith("external")):
         return []
 
     mypy_config_file = ctx.file._mypy_config
@@ -38,11 +39,11 @@ def _mypy_aspect_impl(target, ctx):
                     direct_src_files.append(f)
 
     direct_src_files_depset = depset(direct=direct_src_files)
-    mypypath = None
+    mypypath_parts = []
 
     stub_files = []
     transitive_srcs_depsets = []
-    if hasattr(ctx.rule.attr, 'deps'):
+    if hasattr(ctx.rule.attr, "deps"):
         # Need to add the .py files AND the .pyi files that are
         # deps of the rule
         for dep in ctx.rule.attr.deps:
@@ -50,15 +51,28 @@ def _mypy_aspect_impl(target, ctx):
                 for stub_srcs_target in dep[MyPyStubsInfo].srcs:
                     for src_f in stub_srcs_target.files.to_list():
                         if src_f.extension == "pyi":
-                            mypypath = src_f.dirname
+                            mypypath_parts += [src_f.dirname]
                             stub_files.append(src_f)
             elif PyInfo in dep and not _is_external_dep(dep):
                 transitive_srcs_depsets.append(dep[PyInfo].transitive_sources)
+
+    if hasattr(ctx.rule.attr, "imports"):
+        # NOTE: Bazel's implementation of this for py_binary, py_test is at
+        # src/main/java/com/google/devtools/build/lib/bazel/rules/python/BazelPythonSemantics.java
+        for import_ in ctx.rule.attr.imports:
+            if import_.startswith("/"):
+                print("ignoring invalid absolute path '{}'".format(import_))
+            elif import_ in ["", "."]:
+                mypypath_parts.append(ctx.label.package)
+            else:
+                mypypath_parts.append("{}/{}".format(ctx.label.package, import_))
 
     final_srcs_depset = depset(transitive = transitive_srcs_depsets + [direct_src_files_depset])
     src_files = [f for f in final_srcs_depset.to_list() if not _is_external_src(f)]
     if not src_files:
         return []
+
+    mypypath = ":".join(mypypath_parts)
 
     mypy_template_expanded_exe = ctx.actions.declare_file(
         "%s_mypy_exe" % ctx.rule.attr.name
