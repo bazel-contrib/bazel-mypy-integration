@@ -51,7 +51,7 @@ def _mypy_aspect_impl(target, ctx):
                 for stub_srcs_target in dep[MyPyStubsInfo].srcs:
                     for src_f in stub_srcs_target.files.to_list():
                         if src_f.extension == "pyi":
-                            mypypath += [src_f.dirname]
+                            mypypath_parts += [src_f.dirname]
                             stub_files.append(src_f)
             elif PyInfo in dep and not _is_external_dep(dep):
                 transitive_srcs_depsets.append(dep[PyInfo].transitive_sources)
