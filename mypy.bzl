@@ -13,7 +13,7 @@ def _sources_to_cache_map_triples(srcs):
         triples_as_flat_list.extend([
             shell.quote(f.path),
             shell.quote("{}.meta.json".format(f.path)),
-            shell.quote("{}.data.json".format(f.path))
+            shell.quote("{}.data.json".format(f.path)),
         ])
     return triples_as_flat_list
 
@@ -32,13 +32,13 @@ def _mypy_aspect_impl(target, ctx):
 
     # Make sure the rule has a srcs attribute.
     direct_src_files = []
-    if hasattr(ctx.rule.attr, 'srcs'):
+    if hasattr(ctx.rule.attr, "srcs"):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
                 if f.extension in VALID_EXTENSIONS:
                     direct_src_files.append(f)
 
-    direct_src_files_depset = depset(direct=direct_src_files)
+    direct_src_files_depset = depset(direct = direct_src_files)
     mypypath_parts = []
 
     stub_files = []
@@ -75,7 +75,7 @@ def _mypy_aspect_impl(target, ctx):
     mypypath = ":".join(mypypath_parts)
 
     mypy_template_expanded_exe = ctx.actions.declare_file(
-        "%s_mypy_exe" % ctx.rule.attr.name
+        "%s_mypy_exe" % ctx.rule.attr.name,
     )
     out = ctx.actions.declare_file("%s_dummy_out" % ctx.rule.attr.name)
     ctx.actions.expand_template(
@@ -85,13 +85,13 @@ def _mypy_aspect_impl(target, ctx):
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
             "{SRCS}": " ".join([
-                shell.quote(f.path) for
-                f in src_files
+                shell.quote(f.path)
+                for f in src_files
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{OUTPUT}": out.path,
             "{MYPYPATH_PATH}": mypypath if mypypath else "",
-            "{MYPY_INI_PATH}": mypy_config_file.path
+            "{MYPY_INI_PATH}": mypy_config_file.path,
         },
         is_executable = True,
     )
@@ -109,13 +109,14 @@ def _mypy_aspect_impl(target, ctx):
     return [
         OutputGroupInfo(
             mypy = depset([out]),
-        )
+        ),
     ]
 
-mypy_aspect = aspect(implementation = _mypy_aspect_impl,
-    attr_aspects = ['deps'],
+mypy_aspect = aspect(
+    implementation = _mypy_aspect_impl,
+    attr_aspects = ["deps"],
     attrs = {
-        "_template" : attr.label(
+        "_template": attr.label(
             default = Label("//templates:mypy.sh.tpl"),
             allow_single_file = True,
         ),
@@ -128,5 +129,5 @@ mypy_aspect = aspect(implementation = _mypy_aspect_impl,
             default = Label("@mypy_integration_config//:mypy.ini"),
             allow_single_file = True,
         ),
-    }
+    },
 )

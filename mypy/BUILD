@@ -4,6 +4,8 @@ py_binary(
     name = "mypy",
     srcs = ["main.py"],
     main = "main.py",
+    python_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
         requirement("mypy"),
         # Transitive deps determined by looking at: https://github.com/python/mypy/blob/master/mypy-requirements.txt
@@ -11,6 +13,4 @@ py_binary(
         requirement("mypy_extensions"),
         requirement("typed_ast"),
     ],
-    visibility = ["//visibility:public"],
-    python_version = "PY3",
 )

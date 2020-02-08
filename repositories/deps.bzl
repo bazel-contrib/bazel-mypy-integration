@@ -3,6 +3,7 @@
 Provides functions to pull all external package dependencies of this
 repository.
 """
+
 load(":py_repositories.bzl", "py_deps")
 
 def deps(mypy_requirements_file):

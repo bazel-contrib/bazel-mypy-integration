@@ -17,6 +17,5 @@ py_binary(
     srcs = ["word_freqs_with_dict.py"],
     main = "word_freqs_with_dict.py",
     python_version = "PY3",
-    deps = []
+    deps = [],
 )
-

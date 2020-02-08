@@ -3,20 +3,20 @@ workspace(name = "examples")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-
 ########################
 # MYPY SUPPORT
 ########################
 
 local_repository(
     name = "mypy_integration",
-    path = "../"
+    path = "../",
 )
 
 load(
     "@mypy_integration//repositories:repositories.bzl",
     mypy_integration_repositories = "repositories",
 )
+
 mypy_integration_repositories()
 
 load("@mypy_integration//:config.bzl", "mypy_configuration")
@@ -49,17 +49,20 @@ py_repositories()
 
 # Only needed if using the packaging rules.
 load("@rules_python//python:pip.bzl", "pip_repositories")
+
 pip_repositories()
 
 load("@rules_python//python:pip.bzl", "pip_import")
 
-pip_import(   # or pip3_import
-   name = "my_deps",
-   requirements = "//third_party:requirements.txt",
-   python_interpreter = "python3",
+pip_import(
+    # or pip3_import
+    name = "my_deps",
+    python_interpreter = "python3",
+    requirements = "//third_party:requirements.txt",
 )
 
 load("@my_deps//:requirements.bzl", "pip_install")
+
 pip_install()
 
 # THIRD-PARTY PYTHON
@@ -86,15 +89,18 @@ pip_repository(
 ########################
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "bazel_skylib",
+    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
         "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
     ],
-    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
 )
+
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
 bazel_skylib_workspace()
 
 http_archive(

@@ -9,10 +9,10 @@ mypy_stubs(
 py_binary(
     name = "parse_name",
     srcs = glob(["*.py"]),
+    main = "parse_name.py",
+    python_version = "PY3",
     deps = [
         ":stubs",
         requirement("parse"),
     ],
-    main = "parse_name.py",
-    python_version = "PY3",
 )
