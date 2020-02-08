@@ -102,6 +102,7 @@ def _mypy_aspect_impl(target, ctx):
         tools = [ctx.executable._mypy_cli],
         executable = mypy_template_expanded_exe,
         mnemonic = "MyPy",
+        progress_message = "Type-checking %s" % ctx.label,
         use_default_shell_env = True,
     )
 
