@@ -9,7 +9,7 @@ py_binary(
 )
 
 mypy_test(
-    name = "hangman-validity",
+    name = "hangman_mypy",
     deps = [
         ":hangman",
     ],

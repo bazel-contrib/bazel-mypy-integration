@@ -23,3 +23,7 @@ mypy_test(
     name = "broken_mypy_test",
     deps = [":broken_mypy_typings"],
 )
+
+mypy_test(
+    name = "empty_mypy_test",
+)

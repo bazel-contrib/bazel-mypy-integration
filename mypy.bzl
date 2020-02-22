@@ -91,8 +91,6 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     transitive_srcs_depsets = []
     stub_files = []
 
-    # First check whether the field exists before loading deps, sources, and
-    # imports.
     if hasattr(base_rule.attr, "srcs"):
         direct_src_files = _extract_srcs(base_rule.attr.srcs)
 
@@ -103,10 +101,11 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     if hasattr(base_rule.attr, "imports"):
         mypypath_parts = _extract_imports(base_rule.attr.imports, ctx.label)
 
-    final_srcs_depset = depset(transitive = transitive_srcs_depsets + [depset(direct = direct_src_files)])
+    final_srcs_depset = depset(transitive = transitive_srcs_depsets +
+                                            [depset(direct = direct_src_files)])
     src_files = [f for f in final_srcs_depset.to_list() if not _is_external_src(f)]
     if not src_files:
-        return []
+        return None
 
     mypypath_parts += [src_f.dirname for src_f in stub_files]
     mypypath = ":".join(mypypath_parts)
@@ -166,6 +165,8 @@ def _mypy_aspect_impl(target, ctx):
         exe = mypy_runner_exe,
         out_path = out.path,
     )
+    if not info:
+        return []
     ctx.actions.run(
         outputs = [out],
         inputs = info.default_runfiles.files,
@@ -182,7 +183,10 @@ def _mypy_aspect_impl(target, ctx):
     ]
 
 def _mypy_test_impl(ctx):
-    return _mypy_rule_impl(ctx, is_aspect = False)
+    info = _mypy_rule_impl(ctx, is_aspect = False)
+    if not info:
+        fail("A list of python deps are required for mypy_test")
+    return info
 
 mypy_aspect = aspect(
     implementation = _mypy_aspect_impl,

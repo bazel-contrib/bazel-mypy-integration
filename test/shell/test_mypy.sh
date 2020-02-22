@@ -20,7 +20,12 @@ test_fails_on_broken_mypy_test() {
   action_should_fail test //test:broken_mypy_test
 }
 
+test_fails_on_empty_mypy_test() {
+  action_should_fail test //test:empty_mypy_test
+}
+
 $runner test_ok_on_valid_mypy_typings
 $runner test_fails_on_broken_mypy_typings
 $runner test_ok_on_valid_mypy_test
 $runner test_fails_on_broken_mypy_test
+$runner test_fails_on_empty_mypy_test
