@@ -6,6 +6,7 @@ load("//:rules.bzl", "MyPyStubsInfo")
 DEBUG = False
 
 VALID_EXTENSIONS = ["py", "pyi"]
+GENERATED_PREFIX = "bazel-out/k8-fastbuild/bin/"
 
 DEFAULT_ATTRS = {
     "_template": attr.label(
@@ -128,16 +129,24 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
+    # We need to first filter src for generated files, unless they are
+    # explicitly in our src.
+    src_checkable = [
+        src
+        for src in src_files
+        if not src.path.startswith(GENERATED_PREFIX) or
+           src in direct_src_files
+    ]
     ctx.actions.expand_template(
         template = ctx.file._template,
         output = exe,
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
-            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
+            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_checkable)),
             "{SRCS}": " ".join([
                 shell.quote(f.path)
-                for f in src_files
+                for f in src_checkable
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{VERBOSE_BASH}": "set -x" if DEBUG else "",
