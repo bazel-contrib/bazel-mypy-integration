@@ -145,8 +145,7 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     # bazel-out/<cpu-arc>-<build-type>/bin
     package_roots += ["/".join(src.path.split("/")[:3]) for src in src_checkable if src.path.startswith(GENERATED_PREFIX)]
 
-    # Changing our list to a depset and back removes duplicates and normalizes
-    # the list to File.
+    # Changing our list to a depset and back removes duplicates.
     package_roots = depset(package_roots).to_list()
 
     ctx.actions.expand_template(
