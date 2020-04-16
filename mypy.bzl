@@ -1,4 +1,5 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 # Switch to True only during debugging and development.
@@ -140,13 +141,13 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
 
     package_roots = ["."]
 
+    # TODO: Make this less of a hack
     # In addition, we need to add the generated locations to our package roots.
     # We expect the location to be of the form:
     # bazel-out/<cpu-arc>-<build-type>/bin
-    package_roots += ["/".join(src.path.split("/")[:3]) for src in src_checkable if src.path.startswith(GENERATED_PREFIX)]
+    package_roots += ["/".join(src.path.split("/")[:3]) for src in src_files if src.path.startswith(GENERATED_PREFIX)]
 
-    # Changing our list to a depset and back removes duplicates.
-    package_roots = depset(package_roots).to_list()
+    package_roots = sets.to_list(sets.make(package_roots))
 
     ctx.actions.expand_template(
         template = ctx.file._template,
@@ -154,7 +155,7 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
-            "{PACKAGE_ROOTS}": " --package-root ".join(package_roots),
+            "{PACKAGE_ROOTS}": " ".join(["--package-root {}".format(root) for root in package_roots]),
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_checkable)),
             "{SRCS}": " ".join([
                 shell.quote(f.path)
