@@ -65,7 +65,7 @@ mypy_integration_version = "0.0.7" # latest @ Feb 10th 2020
 
 http_archive(
     name = "mypy_integration",
-    sha256 = "32b0d56827288931ed3b93f047f18bd417a98fbf25fb34f6a8d9ed8d35cdaa55", # for 0.0.7
+    sha256 = "bf7ecd386740328f96c343dca095a63b93df7f86f8d3e1e2e6ff46e400880077", # for 0.0.7
     strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
     url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.zip".format(
         version = mypy_integration_version
