@@ -1,4 +1,5 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 # Switch to True only during debugging and development.
@@ -91,6 +92,13 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     transitive_srcs_depsets = []
     stub_files = []
 
+    if not hasattr(base_rule.attr, "srcs"):
+        return None
+
+    direct_src_root_paths = sets.to_list(
+        sets.make([f.root.path for f in direct_src_files]),
+    )
+
     if hasattr(base_rule.attr, "srcs"):
         direct_src_files = _extract_srcs(base_rule.attr.srcs)
 
@@ -135,6 +143,10 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
+            "{PACKAGE_ROOTS}": " ".join([
+                "--package-root " + shell.quote(path or ".")
+                for path in direct_src_root_paths
+            ]),
             "{SRCS}": " ".join([
                 shell.quote(f.path)
                 for f in src_files
