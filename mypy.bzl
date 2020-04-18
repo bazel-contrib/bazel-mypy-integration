@@ -92,9 +92,6 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     transitive_srcs_depsets = []
     stub_files = []
 
-    if not hasattr(base_rule.attr, "srcs"):
-        return None
-
     direct_src_root_paths = sets.to_list(
         sets.make([f.root.path for f in direct_src_files]),
     )
