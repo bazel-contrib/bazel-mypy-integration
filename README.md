@@ -1,4 +1,4 @@
-# `bazel-mypy-integration`
+# `bazel-mypy-integration` ![](https://github.com/thundergolfer/bazel-mypy-integration/workflows/CI/badge.svg)
 
 _Integrate [MyPy](https://github.com/python/mypy) type-checking into your Python Bazel builds._
 
