@@ -1,4 +1,5 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 # Switch to True only during debugging and development.
@@ -33,12 +34,6 @@ def _sources_to_cache_map_triples(srcs):
         ])
     return triples_as_flat_list
 
-def _is_external_dep(dep):
-    return dep.label.workspace_root.startswith("external/")
-
-def _is_external_src(src_file):
-    return src_file.path.startswith("external/")
-
 def _extract_srcs(srcs):
     direct_src_files = []
     for src in srcs:
@@ -50,7 +45,7 @@ def _extract_srcs(srcs):
 def _extract_transitive_deps(deps):
     transitive_deps = []
     for dep in deps:
-        if MyPyStubsInfo not in dep and PyInfo in dep and not _is_external_dep(dep):
+        if MyPyStubsInfo not in dep and PyInfo in dep:
             transitive_deps.append(dep[PyInfo].transitive_sources)
     return transitive_deps
 
@@ -91,8 +86,12 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     transitive_srcs_depsets = []
     stub_files = []
 
-    if hasattr(base_rule.attr, "srcs"):
-        direct_src_files = _extract_srcs(base_rule.attr.srcs)
+    if not hasattr(base_rule.attr, "srcs"):
+        return None
+    direct_src_files = _extract_srcs(base_rule.attr.srcs)
+    direct_src_root_paths = sets.to_list(
+        sets.make([f.root.path for f in direct_src_files]),
+    )
 
     if hasattr(base_rule.attr, "deps"):
         transitive_srcs_depsets = _extract_transitive_deps(base_rule.attr.deps)
@@ -101,12 +100,10 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     if hasattr(base_rule.attr, "imports"):
         mypypath_parts = _extract_imports(base_rule.attr.imports, ctx.label)
 
-    final_srcs_depset = depset(transitive = transitive_srcs_depsets +
-                                            [depset(direct = direct_src_files)])
-    src_files = [f for f in final_srcs_depset.to_list() if not _is_external_src(f)]
-    if not src_files:
-        return None
-
+    transitive_src_files = depset(
+        direct = direct_src_files,
+        transitive = transitive_srcs_depsets,
+    ).to_list()
     mypypath_parts += [src_f.dirname for src_f in stub_files]
     mypypath = ":".join(mypypath_parts)
 
@@ -124,9 +121,9 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     # Compose a list of the files needed for use. Note that aspect rules can use
     # the project version of mypy however, other rules should fall back on their
     # relative runfiles.
-    runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file])
+    runfiles = ctx.runfiles(files = transitive_src_files + stub_files + [mypy_config_file])
     if not is_aspect:
-        runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
+        runfiles = runfiles.merge(ctx.attr.mypy.default_runfiles)
 
     ctx.actions.expand_template(
         template = ctx.file._template,
@@ -134,10 +131,16 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
-            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
+            "{CACHE_MAP_TRIPLES}": " ".join(
+                _sources_to_cache_map_triples(transitive_src_files),
+            ),
+            "{SRC_ROOTS}": " ".join([
+                "--package-root " + shell.quote(path or ".")
+                for path in direct_src_root_paths
+            ]),
             "{SRCS}": " ".join([
-                shell.quote(f.path)
-                for f in src_files
+                shell.quote(f.path) for
+                f in direct_src_files
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{VERBOSE_BASH}": "set -x" if DEBUG else "",

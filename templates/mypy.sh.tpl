@@ -27,7 +27,7 @@ main() {
   fi
 
   set +o errexit
-  output=$($mypy {VERBOSE_OPT} --bazel --package-root . --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1)
+  output=$({MYPY_EXE} {VERBOSE_OPT} --bazel {SRC_ROOTS} --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1)
   status=$?
   set -o errexit
 
