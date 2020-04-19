@@ -1,4 +1,5 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 # Switch to True only during debugging and development.
@@ -6,6 +7,7 @@ load("//:rules.bzl", "MyPyStubsInfo")
 DEBUG = False
 
 VALID_EXTENSIONS = ["py", "pyi"]
+GENERATED_PREFIX = "bazel-out/"
 
 DEFAULT_ATTRS = {
     "_template": attr.label(
@@ -128,16 +130,36 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
+    # We need to first filter src for generated files, unless they are
+    # explicitly in our src.
+    src_checkable = [
+        src
+        for src in src_files
+        if not src.path.startswith(GENERATED_PREFIX) or
+           src in direct_src_files
+    ]
+
+    package_roots = ["."]
+
+    # TODO: Make this less of a hack
+    # In addition, we need to add the generated locations to our package roots.
+    # We expect the location to be of the form:
+    # bazel-out/<cpu-arc>-<build-type>/bin
+    package_roots += ["/".join(src.path.split("/")[:3]) for src in src_files if src.path.startswith(GENERATED_PREFIX)]
+
+    package_roots = sets.to_list(sets.make(package_roots))
+
     ctx.actions.expand_template(
         template = ctx.file._template,
         output = exe,
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
-            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
+            "{PACKAGE_ROOTS}": " ".join(["--package-root {}".format(root) for root in package_roots]),
+            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_checkable)),
             "{SRCS}": " ".join([
                 shell.quote(f.path)
-                for f in src_files
+                for f in src_checkable
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{VERBOSE_BASH}": "set -x" if DEBUG else "",
