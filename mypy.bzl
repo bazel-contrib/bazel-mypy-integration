@@ -92,10 +92,6 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     transitive_srcs_depsets = []
     stub_files = []
 
-    direct_src_root_paths = sets.to_list(
-        sets.make([f.root.path for f in direct_src_files]),
-    )
-
     if hasattr(base_rule.attr, "srcs"):
         direct_src_files = _extract_srcs(base_rule.attr.srcs)
 
@@ -132,6 +128,10 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file])
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
+
+    direct_src_root_paths = sets.to_list(
+        sets.make([f.root.path for f in direct_src_files]),
+    )
 
     ctx.actions.expand_template(
         template = ctx.file._template,
