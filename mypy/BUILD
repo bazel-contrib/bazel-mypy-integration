@@ -14,3 +14,9 @@ py_binary(
         requirement("typed_ast"),
     ],
 )
+
+filegroup(
+    name = "distribution",
+    srcs = glob(["**"]),
+    visibility = ["//:__pkg__"],
+)
