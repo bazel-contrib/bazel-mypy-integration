@@ -1,8 +1,15 @@
-# `bazel-mypy-integration` ![](https://github.com/thundergolfer/bazel-mypy-integration/workflows/CI/badge.svg)
+<h1 align="center"><code>bazel-mypy-integration</code></h1>
+<p align="center">
+    <a href="https://github.com/thundergolfer/bazel-mypy-integration/actions/">
+        <img src="https://github.com/thundergolfer/bazel-mypy-integration/workflows/CI/badge.svg">
+    </a>
+</p>
+<p align="center">
+    <em>Integrate <a href="https://github.com/python/mypy">MyPy</a> type-checking into your Python Bazel builds.</em>
+      
 
-_Integrate [MyPy](https://github.com/python/mypy) type-checking into your Python Bazel builds._
+---
 
------
 
 ⚠️ This software is [**now in 'production' use**](#adopters), but still in the **PRE-RELEASE PHASE** and under active development. Please give it a try, and ⭐️ or watch the repo to follow progress ⚠️
 
