@@ -68,11 +68,11 @@ mypy==0.750
 **2. Next, add the following to your `WORKSPACE`:**
 
 ```python
-mypy_integration_version = "0.0.8" # latest @ July 21st 2020
+mypy_integration_version = "0.0.9" # latest @ July 21st 2020
 
 http_archive(
     name = "mypy_integration",
-    sha256 = "72579daf3e1baaa5eb587f1b53a53750ef5d259cc5e1b3b21c9dcbd3a820bbf1", # for 0.0.8
+    sha256 = "05812795afaf9d090451bc6659477f366541261ce9f390ebcaff8156312dbe09", # for 0.0.8
     strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
     url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.zip".format(
         version = mypy_integration_version
