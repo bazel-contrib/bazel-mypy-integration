@@ -24,13 +24,20 @@ DEFAULT_ATTRS = {
     ),
 }
 
-def _sources_to_cache_map_triples(srcs):
+def _sources_to_cache_map_triples(srcs, is_aspect):
     triples_as_flat_list = []
     for f in srcs:
+        if is_aspect:
+            f_path = f.path
+        else:
+            # "The path of this file relative to its root. This excludes the aforementioned root, i.e. configuration-specific fragments of the path.
+            # This is also the path under which the file is mapped if it's in the runfiles of a binary."
+            # - https://docs.bazel.build/versions/master/skylark/lib/File.html
+            f_path = f.short_path
         triples_as_flat_list.extend([
-            shell.quote(f.path),
-            shell.quote("{}.meta.json".format(f.path)),
-            shell.quote("{}.data.json".format(f.path)),
+            shell.quote(f_path),
+            shell.quote("{}.meta.json".format(f_path)),
+            shell.quote("{}.data.json".format(f_path)),
         ])
     return triples_as_flat_list
 
@@ -139,13 +146,13 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
-            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
+            "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files, is_aspect)),
             "{PACKAGE_ROOTS}": " ".join([
                 "--package-root " + shell.quote(path or ".")
                 for path in src_root_paths
             ]),
             "{SRCS}": " ".join([
-                shell.quote(f.path)
+                shell.quote(f.path) if is_aspect else shell.quote(f.short_path)
                 for f in src_files
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
