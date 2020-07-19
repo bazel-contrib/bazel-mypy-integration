@@ -2,6 +2,13 @@ load("@bazel_skylib//lib:shell.bzl", "shell")
 load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
+MyPyAspectInfo = provider(
+    fields = {
+        "exe": "BLAH",
+        "out": "BLEE",
+    },
+)
+
 # Switch to True only during debugging and development.
 # All releases should have this as False.
 DEBUG = False
@@ -87,7 +94,7 @@ def _extract_imports(imports, label):
             mypypath_parts.append("{}/{}".format(label.package, import_))
     return mypypath_parts
 
-def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
+def _mypy_rule_impl(ctx, is_aspect = False):
     base_rule = ctx
     if is_aspect:
         base_rule = ctx.rule
@@ -121,13 +128,19 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     # Ideally, a file should be passed into this rule. If this is an executable
     # rule, then we default to the implicit executable file, otherwise we create
     # a stub.
-    if exe == None:
+    if not is_aspect:
         if hasattr(ctx, "outputs"):
             exe = ctx.outputs.executable
         else:
             exe = ctx.actions.declare_file(
                 "%s_mypy_exe" % base_rule.attr.name,
             )
+        out = None
+    else:
+        out = ctx.actions.declare_file("%s_dummy_out" % ctx.rule.attr.name)
+        exe = ctx.actions.declare_file(
+            "%s_mypy_exe" % ctx.rule.attr.name,
+        )
 
     # Compose a list of the files needed for use. Note that aspect rules can use
     # the project version of mypy however, other rules should fall back on their
@@ -157,13 +170,18 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
             ]),
             "{VERBOSE_OPT}": "--verbose" if DEBUG else "",
             "{VERBOSE_BASH}": "set -x" if DEBUG else "",
-            "{OUTPUT}": out_path if out_path else "",
+            "{OUTPUT}": out.path if out else "",
             "{MYPYPATH_PATH}": mypypath if mypypath else "",
             "{MYPY_INI_PATH}": mypy_config_file.path,
         },
         is_executable = True,
     )
 
+    if is_aspect:
+        return [
+            DefaultInfo(executable = exe, runfiles = runfiles),
+            MyPyAspectInfo(exe = exe, out = out)
+        ]
     return DefaultInfo(executable = exe, runfiles = runfiles)
 
 def _mypy_aspect_impl(target, ctx):
@@ -171,30 +189,28 @@ def _mypy_aspect_impl(target, ctx):
         ctx.label.workspace_root.startswith("external")):
         return []
 
-    out = ctx.actions.declare_file("%s_dummy_out" % ctx.rule.attr.name)
-    mypy_runner_exe = ctx.actions.declare_file(
-        "%s_mypy_exe" % ctx.rule.attr.name,
-    )
-    info = _mypy_rule_impl(
+    providers = _mypy_rule_impl(
         ctx,
         is_aspect = True,
-        exe = mypy_runner_exe,
-        out_path = out.path,
     )
-    if not info:
+    if not providers:
         return []
+
+    info = providers[0]
+    aspect_info = providers[1]
+
     ctx.actions.run(
-        outputs = [out],
+        outputs = [aspect_info.out],
         inputs = info.default_runfiles.files,
         tools = [ctx.executable._mypy_cli],
-        executable = mypy_runner_exe,
+        executable = aspect_info.exe,
         mnemonic = "MyPy",
         progress_message = "Type-checking %s" % ctx.label,
         use_default_shell_env = True,
     )
     return [
         OutputGroupInfo(
-            mypy = depset([out]),
+            mypy = depset([aspect_info.out]),
         ),
     ]
 

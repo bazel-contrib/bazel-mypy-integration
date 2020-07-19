@@ -3,6 +3,12 @@ package(default_testonly = 1)
 load("//:mypy.bzl", "mypy_test")
 
 py_library(
+    name = "empty_srcs_lib",
+    srcs = [],
+    srcs_version = "PY3",
+)
+
+py_library(
     name = "broken_mypy_typings",
     srcs = ["broken_mypy_typings.py"],
     srcs_version = "PY3",
