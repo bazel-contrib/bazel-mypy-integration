@@ -9,14 +9,14 @@ load(
 def repositories():
     excludes = native.existing_rules().keys()
 
-    rules_python_version = "7b222cfdb4e59b9fd2a609e1fbb233e94fdcde7c"
+    rules_python_version = "0.0.2"
 
     if "rules_python" not in excludes:
         http_archive(
             name = "rules_python",
-            sha256 = "d2865e2ce23ee217aaa408ddaa024ca472114a6f250b46159d27de05530c75e3",
+            url = "https://github.com/bazelbuild/rules_python/releases/download/{version}/rules_python-{version}.tar.gz".format(version = rules_python_version),
             strip_prefix = "rules_python-{version}".format(version = rules_python_version),
-            url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
+            sha256 = "b5668cde8bb6e3515057ef465a35ad712214962f0b3a314e551204266c7be90c",
         )
 
     if "bazel_skylib" not in excludes:
