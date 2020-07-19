@@ -32,7 +32,7 @@ filegroup(
     ],
 )
 
-version = "0.0.9"
+version = "0.0.10"
 
 # Build the artifact to put on the github release page.
 pkg_tar(
