@@ -129,8 +129,8 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
-    direct_src_root_paths = sets.to_list(
-        sets.make([f.root.path for f in direct_src_files]),
+    src_root_paths = sets.to_list(
+        sets.make([f.root.path for f in src_files]),
     )
 
     ctx.actions.expand_template(
@@ -142,7 +142,7 @@ def _mypy_rule_impl(ctx, is_aspect = False, exe = None, out_path = None):
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files)),
             "{PACKAGE_ROOTS}": " ".join([
                 "--package-root " + shell.quote(path or ".")
-                for path in direct_src_root_paths
+                for path in src_root_paths
             ]),
             "{SRCS}": " ".join([
                 shell.quote(f.path)
