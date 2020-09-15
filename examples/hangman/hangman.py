@@ -8,6 +8,8 @@ Demonstrates very basic Python typing.
 import random
 from typing import Optional, List, Tuple
 
+import hangman_tools
+
 
 class HangMan(object):
     hang: List[str] = [" +---+", " |   |", "     |", "     |", "     |", "     |", "======="]
@@ -27,6 +29,8 @@ crow deer dog donkey duck eagle ferret fox frog goat goose hawk lion lizard llam
 mole monkey moose mouse mule newt otter owl panda parrot pigeon python rabbit ram
 rat raven rhino salmon seal shark sheep skunk sloth snake spider stork swan tiger
 toad trout turkey turtle weasel whale wolf wombat zebra""".split()
+
+    words.append(hangman_tools.things())
 
     infStr = "_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'*-_-*'"
 

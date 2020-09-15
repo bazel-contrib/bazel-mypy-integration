@@ -1,7 +1,7 @@
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
-
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_python//:version.bzl", "version")
+load(":mypy_tests.bzl", "unittest_suite")
 
 buildifier(
     name = "buildifier",
@@ -48,3 +48,5 @@ pkg_tar(
     package_dir = ".",
     strip_prefix = ".",
 )
+
+unittest_suite()
