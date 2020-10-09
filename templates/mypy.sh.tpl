@@ -11,10 +11,12 @@ main() {
   local status
   local root
   local mypy
+  local py
 
   report_file="{OUTPUT}"
   root="{MYPY_ROOT}/"
   mypy="{MYPY_EXE}"
+  py="{PY_EXE}"
 
   # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
 
@@ -27,7 +29,7 @@ main() {
   fi
 
   set +o errexit
-  output=$($mypy {VERBOSE_OPT} --bazel {PACKAGE_ROOTS} --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1)
+  output=$($mypy {VERBOSE_OPT} --bazel {PACKAGE_ROOTS} --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} --python-executable ${py} -- {SRCS} 2>&1)
   status=$?
   set -o errexit
 
