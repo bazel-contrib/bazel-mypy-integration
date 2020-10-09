@@ -25,6 +25,11 @@ DEFAULT_ATTRS = {
         executable = True,
         cfg = "host",
     ),
+    "_sitepkg_runner": attr.label(
+        default = Label("//mypy:sitepkg_runner"),
+        executable = True,
+        cfg = "host",
+      ),
     "_mypy_config": attr.label(
         default = Label("@mypy_integration_config//:mypy.ini"),
         allow_single_file = True,
@@ -66,6 +71,9 @@ def _extract_srcs(srcs):
                 direct_src_files.append(f)
     return direct_src_files
 
+
+def _extract_external_deps(deps):
+    return [dep for dep in deps if _is_external_dep(dep)]
 
 def _extract_transitive_deps(deps):
     transitive_deps = []
@@ -120,6 +128,7 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     if hasattr(base_rule.attr, "deps"):
         transitive_srcs_depsets = _extract_transitive_deps(base_rule.attr.deps)
         stub_files = _extract_stub_deps(base_rule.attr.deps)
+        external_deps = _extract_external_deps(base_rule.attr.deps)
 
     if hasattr(base_rule.attr, "imports"):
         mypypath_parts = _extract_imports(base_rule.attr.imports, ctx.label)
@@ -154,6 +163,9 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     # the project version of mypy however, other rules should fall back on their
     # relative runfiles.
     runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file])
+    for dep in external_deps:
+        runfiles = runfiles.merge(dep[DefaultInfo].default_runfiles)
+
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
@@ -166,6 +178,7 @@ def _mypy_rule_impl(ctx, is_aspect = False):
         output = exe,
         substitutions = {
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
+            "{PY_EXE}": ctx.executable._sitepkg_runner.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files, is_aspect)),
             "{PACKAGE_ROOTS}": " ".join([
@@ -211,7 +224,7 @@ def _mypy_aspect_impl(target, ctx):
     ctx.actions.run(
         outputs = [aspect_info.out],
         inputs = info.default_runfiles.files,
-        tools = [ctx.executable._mypy_cli],
+        tools = [ctx.executable._mypy_cli, ctx.executable._sitepkg_runner],
         executable = aspect_info.exe,
         mnemonic = "MyPy",
         progress_message = "Type-checking %s" % ctx.label,
