@@ -20,6 +20,11 @@ def external_packages():
         if not os.path.isdir(fulld):
             continue
         r.append(fulld)
+        for dir2 in os.listdir(fulld):
+            fulld2 = os.path.abspath(os.path.join(fulld, dir2))
+            if not os.path.isdir(fulld2):
+                continue
+            r.append(fulld2)
     return r
 
 if __name__ == '__main__':
