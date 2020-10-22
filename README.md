@@ -92,10 +92,6 @@ mypy_configuration("//tools/typing:mypy.ini")
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps("//tools/typing:mypy_version.txt")
-
-load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
-
-pip_deps()
 ```
 
 **3. Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever

@@ -1,7 +1,6 @@
 workspace(name = "examples")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 ########################
 # MYPY SUPPORT
@@ -27,18 +26,14 @@ load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps("//tools/typing:mypy_version.txt")
 
-load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
-
-pip_deps()
-
 ########################
 # PYTHON SUPPORT
 ########################
-rules_python_version = "7b222cfdb4e59b9fd2a609e1fbb233e94fdcde7c"
+rules_python_version = "5c948dcfd4ca79c2ed3a87636c46abba9f5836e9"
 
 http_archive(
     name = "rules_python",
-    sha256 = "d2865e2ce23ee217aaa408ddaa024ca472114a6f250b46159d27de05530c75e3",
+    sha256 = "76e817a5e540f4c8a8b5e1de1e7afee6dfa42d78112a3694244450287ac20ebb",
     strip_prefix = "rules_python-{version}".format(version = rules_python_version),
     url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
 )
@@ -47,48 +42,16 @@ load("@rules_python//python:repositories.bzl", "py_repositories")
 
 py_repositories()
 
-# Only needed if using the packaging rules.
-load("@rules_python//python:pip.bzl", "pip_repositories")
+load("@rules_python//python:pip.bzl", "pip_install")
 
-pip_repositories()
-
-load("@rules_python//python:pip.bzl", "pip_import")
-
-pip_import(
-    # or pip3_import
+pip_install(
     name = "my_deps",
     python_interpreter = "python3",
     requirements = "//third_party:requirements.txt",
 )
-
-load("@my_deps//:requirements.bzl", "pip_install")
-
-pip_install()
-
-# THIRD-PARTY PYTHON
-########################
-
-rules_python_external_version = "0e24cd9e051da859745c99e6fe31c833607898b6"
-
-http_archive(
-    name = "rules_python_external",
-    sha256 = "53d938572503e46fd1fe5023c804e3e6ed4dafd5d1f0a03203bfc5e62d8a89db",
-    strip_prefix = "rules_python_external-{version}".format(version = rules_python_external_version),
-    url = "https://github.com/dillon-giacoppo/rules_python_external/archive/{version}.zip".format(version = rules_python_external_version),
-)
-
-load("@rules_python_external//:defs.bzl", "pip_repository")
-
-pip_repository(
-    name = "my_deps",
-    requirements = "//third_party:requirements.txt",
-)
-
 ########################
 # OTHER
 ########################
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "bazel_skylib",
