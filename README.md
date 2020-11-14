@@ -22,7 +22,9 @@ With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` erro
 
 ## Usage
 
-It's highly recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
+## Aspect-based
+
+It's recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
 everytime you `build` Python code. To do that you can add the following to your `.bazelrc`:
 
 ```
@@ -51,6 +53,23 @@ INFO: 1 process: 1 darwin-sandbox.
 FAILED: Build did NOT complete successfully
 ```
 
+### `mypy_test` rule-based
+
+An alternative to registering the Aspect is to use the `mypy_test` rule which will run MyPy when the target run with `bazel test`. 
+
+```
+load("@mypy_integration//:mypy.bzl", "mypy_test")
+
+mypy_test(
+    name = "foo_mypy_test",
+    deps = [
+        ":foo", # py_[library, binary, test] target
+    ],
+)
+```
+
+If there's a typing error in your Python code, then the test will fail. Using `--test_output=all` will ensure the MyPy error is visible in the console.
+
 ## Installation
 
 **1. Create a file that will specify the version of `mypy` to use.** You will pass the Bazel label for
@@ -59,20 +78,18 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 
 ```
 mypy==0.750
-```
-
-⚠️ _Note: Currently only `0.750` (latest) is being supported, but the idea is to support multiple versions in future using the above mechanism._ 
+``` 
 
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
 **2. Next, add the following to your `WORKSPACE`:**
 
 ```python
-mypy_integration_version = "0.0.10" # latest @ July 21st 2020
+mypy_integration_version = "0.1.0" # latest @ November 15th 2020
 
 http_archive(
     name = "mypy_integration",
-    sha256 = "cc1cb372140d6a29ba0dcf5e6ebc961c6d509a7296fb101e70317dfc61d108e7",
+    sha256 = "511ca642294129b7abebf6afd48aa63e7d91de3ec5fa0689d60d1dc6a94a7d1a",
     strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
     url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.tar.gz".format(
         version = mypy_integration_version,
@@ -94,7 +111,7 @@ load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 mypy_integration_deps("//tools/typing:mypy_version.txt")
 ```
 
-**3. Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever
+**3. Finally, if using the Bazel Aspect, add the following to your `.bazelrc` so that MyPy checking is run whenever
 Python code is built:**
 
 ```
