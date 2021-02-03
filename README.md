@@ -108,8 +108,13 @@ mypy_configuration("//tools/typing:mypy.ini")
 
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
-mypy_integration_deps("//tools/typing:mypy_version.txt")
+mypy_integration_deps(
+    mypy_requirements_file="//tools/typing:mypy_version.txt",
+)
 ```
+
+_Note_ that by default `mypy_integration_deps` will default to passing `"python3"` as the interpreter used at install,
+but this can be overridden by setting `python_interpreter` or `python_interpreter_target` (but not both).
 
 **3. Finally, if using the Bazel Aspect, add the following to your `.bazelrc` so that MyPy checking is run whenever
 Python code is built:**
