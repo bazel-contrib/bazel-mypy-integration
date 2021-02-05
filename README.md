@@ -126,7 +126,7 @@ build --output_groups=+mypy
 
 **3b. If using the Bazel rule, you'll add to a `BUILD` file something like:**
 
-```
+```python
 load("@mypy_integration//:mypy.bzl", "mypy_test")
 
 py_binary(
