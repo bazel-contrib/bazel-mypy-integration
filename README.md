@@ -124,6 +124,27 @@ build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
 build --output_groups=+mypy
 ```
 
+**3b. If using the Bazel rule, you'll add to a `BUILD` file something like:**
+
+```
+load("@mypy_integration//:mypy.bzl", "mypy_test")
+
+py_binary(
+    name = "foo",
+    srcs = glob(["foopy"]),
+    main = "foo.py",
+    python_version = "PY3",
+    deps = [],
+)
+
+mypy_test(
+    name = "foo_mypy",
+    deps = [
+        ":foo",
+    ],
+)
+```
+
 ### Configuration
 
 To support the [MyPy configuration file](https://mypy.readthedocs.io/en/latest/config_file.html) you can add the
