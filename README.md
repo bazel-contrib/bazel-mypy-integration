@@ -6,7 +6,7 @@
 </p>
 <p align="center">
     <em>Integrate <a href="https://github.com/python/mypy">MyPy</a> type-checking into your Python Bazel builds.</em>
-      
+
 
 ---
 
@@ -17,7 +17,7 @@
 
 [**`mypy`**](https://github.com/python/mypy) is an incremental type system for Python. Incremental type systems arguably become essential when Python codebases grow to be very large [[1](https://blogs.dropbox.com/tech/2019/09/our-journey-to-type-checking-4-million-lines-of-python/), [2](https://www.facebook.com/notes/protect-the-graph/pyre-fast-type-checking-for-python/2048520695388071/), [3](https://instagram-engineering.com/let-your-code-type-hint-itself-introducing-open-source-monkeytype-a855c7284881), [4](https://github.com/google/pytype)]. As Bazel is a build system designed for very large codebases, it makes sense that they should work together to help a Python codebase scale.
 
-With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` errors, so that teams can be sure their type-checking is being respected. 
+With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` errors, so that teams can be sure their type-checking is being respected.
 
 
 ## Usage
@@ -41,7 +41,7 @@ bazel build --aspects @mypy_integration//:mypy.bzl%mypy_aspect --output_groups=m
 If there's a typing error in your Python code, then your `build` will fail. You'll see something like:
 
 ```bash
-ERROR: /Users/jonathonbelotti/Code/thundergolfer/bazel-mypy-integration/examples/hangman/BUILD:1:1: 
+ERROR: /Users/jonathonbelotti/Code/thundergolfer/bazel-mypy-integration/examples/hangman/BUILD:1:1:
 MyPy hangman/hangman_dummy_out failed (Exit 1) hangman_mypy_exe failed: error executing command bazel-out/darwin-fastbuild/bin/hangman/hangman_mypy_exe
 
 Use --sandbox_debug to see verbose messages from the sandbox
@@ -55,7 +55,7 @@ FAILED: Build did NOT complete successfully
 
 ### `mypy_test` rule-based
 
-An alternative to registering the Aspect is to use the `mypy_test` rule which will run MyPy when the target run with `bazel test`. 
+An alternative to registering the Aspect is to use the `mypy_test` rule which will run MyPy when the target run with `bazel test`.
 
 ```
 load("@mypy_integration//:mypy.bzl", "mypy_test")
@@ -77,8 +77,8 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 `mypy_integration_deps(...)`:
 
 ```
-mypy==0.750
-``` 
+mypy==0.800
+```
 
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
@@ -135,7 +135,7 @@ where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readt
 
 ## 🛠 Development
 
-### Testing 
+### Testing
 
 `./test.sh` runs some basic integration tests. Right now, running the integration in the
 Bazel workspace in `examples/` tests a lot more functionality but can't automatically
