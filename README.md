@@ -80,6 +80,8 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 mypy==0.750
 ``` 
 
+❣️ Ensure that your selected MyPy version is compatible with your Python version. Incompatibilities can produce [obscure looking errors](https://github.com/thundergolfer/bazel-mypy-integration/issues/38).
+
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
 **2. Next, add the following to your `WORKSPACE`:**
