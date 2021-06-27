@@ -77,7 +77,7 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 `mypy_integration_deps(...)`:
 
 ```
-mypy==0.750
+mypy==0.790
 ``` 
 
 ❣️ Ensure that your selected MyPy version is compatible with your Python version. Incompatibilities can produce [obscure looking errors](https://github.com/thundergolfer/bazel-mypy-integration/issues/38).
