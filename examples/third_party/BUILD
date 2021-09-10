@@ -11,5 +11,11 @@ py_binary(
 
 mypy_test(
     name = "uses_deps_mypy",
-    deps = [":uses-deps"],
+    deps = [
+        ":uses-deps",
+        requirement("types_python_dateutil"),
+    ],
+    # Confirmed the launcher script contains
+    # export MYPYPATH="$(pwd):../my_deps/pypi__types_python_dateutil"
+    include_imports = True,
 )
