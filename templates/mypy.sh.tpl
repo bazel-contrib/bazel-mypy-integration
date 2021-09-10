@@ -14,7 +14,8 @@ main() {
   local py
 
   report_file="{OUTPUT}"
-  root="{MYPY_ROOT}/"
+  mypy_root="{MYPY_ROOT}/"
+  py_root="{PY_ROOT}"
   mypy="{MYPY_EXE}"
   py="{PY_EXE}"
 
@@ -25,7 +26,10 @@ main() {
   # Workspace rules run in a different location from aspect rules. Here we
   # normalize if the external source isn't found.
   if [ ! -f $mypy ]; then
-    mypy=${mypy#${root}}
+    mypy=${mypy#${mypy_root}}
+  fi
+  if [ ! -f $py ]; then
+    py=${py#${py_root}}
   fi
 
   set +o errexit
