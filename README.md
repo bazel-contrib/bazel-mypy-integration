@@ -11,7 +11,7 @@
 ---
 
 
-⚠️ This software is [**now in 'production' use**](#adopters), but still in the **PRE-RELEASE PHASE** and under active development. Please give it a try, and ⭐️ or watch the repo to follow progress ⚠️
+⚠️ This software is now in 'production' use, but still in the **PRE-RELEASE PHASE** and under active development. Please give it a try, and ⭐️ or watch the repo to follow progress ⚠️
 
 -----
 
@@ -22,7 +22,9 @@ With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` erro
 
 ## Usage
 
-It's highly recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
+## Aspect-based
+
+It's recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
 everytime you `build` Python code. To do that you can add the following to your `.bazelrc`:
 
 ```
@@ -51,6 +53,23 @@ INFO: 1 process: 1 darwin-sandbox.
 FAILED: Build did NOT complete successfully
 ```
 
+### `mypy_test` rule-based
+
+An alternative to registering the Aspect is to use the `mypy_test` rule which will run MyPy when the target run with `bazel test`. 
+
+```
+load("@mypy_integration//:mypy.bzl", "mypy_test")
+
+mypy_test(
+    name = "foo_mypy_test",
+    deps = [
+        ":foo", # py_[library, binary, test] target
+    ],
+)
+```
+
+If there's a typing error in your Python code, then the test will fail. Using `--test_output=all` will ensure the MyPy error is visible in the console.
+
 ## Installation
 
 **1. Create a file that will specify the version of `mypy` to use.** You will pass the Bazel label for
@@ -58,25 +77,25 @@ this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`
 `mypy_integration_deps(...)`:
 
 ```
-mypy==0.750
-```
+mypy==0.790
+``` 
 
-⚠️ _Note: Currently only `0.750` (latest) is being supported, but the idea is to support multiple versions in future using the above mechanism._ 
+❣️ Ensure that your selected MyPy version is compatible with your Python version. Incompatibilities can produce [obscure looking errors](https://github.com/thundergolfer/bazel-mypy-integration/issues/38).
 
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
 **2. Next, add the following to your `WORKSPACE`:**
 
 ```python
-mypy_integration_version = "0.0.10" # latest @ July 21st 2020
+mypy_integration_version = "0.2.0"  # Latest @ 26th June 2021
 
 http_archive(
     name = "mypy_integration",
-    sha256 = "cc1cb372140d6a29ba0dcf5e6ebc961c6d509a7296fb101e70317dfc61d108e7",
+    sha256 = "621df076709dc72809add1f5fe187b213fee5f9b92e39eb33851ab13487bd67d",
     strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
-    url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/{version}.tar.gz".format(
-        version = mypy_integration_version,
-    ),
+    urls = [
+        "https://github.com/thundergolfer/bazel-mypy-integration/archive/refs/tags/{version}.tar.gz".format(version = mypy_integration_version),
+    ],
 )
 
 load(
@@ -91,19 +110,41 @@ mypy_configuration("//tools/typing:mypy.ini")
 
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
-mypy_integration_deps("//tools/typing:mypy_version.txt")
-
-load("@mypy_integration//repositories:pip_repositories.bzl", "pip_deps")
-
-pip_deps()
+mypy_integration_deps(
+    mypy_requirements_file="//tools/typing:mypy_version.txt",
+)
 ```
 
-**3. Finally, add the following to your `.bazelrc` so that MyPy checking is run whenever
+_Note_ that by default `mypy_integration_deps` will default to passing `"python3"` as the interpreter used at install,
+but this can be overridden by setting `python_interpreter` or `python_interpreter_target` (but not both).
+
+**3. Finally, if using the Bazel Aspect, add the following to your `.bazelrc` so that MyPy checking is run whenever
 Python code is built:**
 
 ```
 build --aspects @mypy_integration//:mypy.bzl%mypy_aspect
 build --output_groups=+mypy
+```
+
+**3b. If using the Bazel rule, you'll add to a `BUILD` file something like:**
+
+```python
+load("@mypy_integration//:mypy.bzl", "mypy_test")
+
+py_binary(
+    name = "foo",
+    srcs = glob(["foopy"]),
+    main = "foo.py",
+    python_version = "PY3",
+    deps = [],
+)
+
+mypy_test(
+    name = "foo_mypy",
+    deps = [
+        ":foo",
+    ],
+)
 ```
 
 ### Configuration
@@ -127,9 +168,3 @@ where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readt
 `./test.sh` runs some basic integration tests. Right now, running the integration in the
 Bazel workspace in `examples/` tests a lot more functionality but can't automatically
 test failure cases.
-
-## Adopters
-
-Here's a (non-exhaustive) list of companies that use `bazel-mypy-integration` in production. Don't see yours? [You can add it in a PR](https://github.com/thundergolfer/bazel-mypy-integration/edit/master/README.md)!
-
-* [Canva](https://www.canva.com/)
