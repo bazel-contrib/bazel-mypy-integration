@@ -44,6 +44,7 @@ mypy_test(
 
 mypy_test(
     name = "empty_mypy_test",
+    tags = ["manual"],
 )
 
 mypy_test(
