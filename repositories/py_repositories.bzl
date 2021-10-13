@@ -5,7 +5,7 @@ Provides functions to pull the external Mypy package dependency.
 
 load("@rules_python//python:pip.bzl", "pip_install")
 
-def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target):
+def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target, extra_pip_args):
     """Pull in external Python packages needed by py binaries in this repo.
     Pull in all dependencies needed to build the Py binaries in this
     repository. This function assumes the repositories imported by the macro
@@ -20,4 +20,5 @@ def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_targe
             requirements = mypy_requirements_file,
             python_interpreter = python_interpreter or "python3",  # mypy requires Python3
             python_interpreter_target = python_interpreter_target,
+            extra_pip_args = extra_pip_args,
         )
