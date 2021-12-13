@@ -11,6 +11,23 @@ py_binary(
     ],
 )
 
+py_binary(
+    name = "sitepkg_runner",
+    srcs = ["sitepkg_runner.py"],
+    main = "sitepkg_runner.py",
+    python_version = "PY3",
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("mypy"),
+        # Transitive deps determined by looking at: https://github.com/python/mypy/blob/master/mypy-requirements.txt
+        requirement("typing_extensions"),
+        requirement("mypy_extensions"),
+        requirement("typed_ast"),
+
+    ],
+)
+
+
 filegroup(
     name = "distribution",
     srcs = glob(["**"]),

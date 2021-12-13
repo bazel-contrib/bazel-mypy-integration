@@ -11,10 +11,13 @@ main() {
   local status
   local root
   local mypy
+  local py
 
   report_file="{OUTPUT}"
-  root="{MYPY_ROOT}/"
+  mypy_root="{MYPY_ROOT}/"
+  py_root="{PY_ROOT}"
   mypy="{MYPY_EXE}"
+  py="{PY_EXE}"
 
   # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
 
@@ -23,11 +26,14 @@ main() {
   # Workspace rules run in a different location from aspect rules. Here we
   # normalize if the external source isn't found.
   if [ ! -f $mypy ]; then
-    mypy=${mypy#${root}}
+    mypy=${mypy#${mypy_root}}
+  fi
+  if [ ! -f $py ]; then
+    py=${py#${py_root}}
   fi
 
   set +o errexit
-  output=$($mypy {VERBOSE_OPT} --bazel {PACKAGE_ROOTS} --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} -- {SRCS} 2>&1)
+  output=$($mypy {VERBOSE_OPT} --bazel {PACKAGE_ROOTS} --config-file {MYPY_INI_PATH} --cache-map {CACHE_MAP_TRIPLES} --python-executable ${py} -- {SRCS} 2>&1)
   status=$?
   set -o errexit
 
