@@ -1,13 +1,17 @@
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
-
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_python//:version.bzl", "version")
 
-buildifier(
-    name = "buildifier",
-)
-
 package(default_visibility = ["//visibility:private"])
+
+buildifier(
+    name = "buildifier.check",
+    exclude_patterns = [
+        "./.git/*",
+    ],
+    lint_mode = "warn",
+    mode = "diff",
+)
 
 licenses(["notice"])  # MIT
 
