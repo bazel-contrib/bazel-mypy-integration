@@ -6,8 +6,9 @@ repository.
 
 load(":py_repositories.bzl", "py_deps")
 
-def deps(mypy_requirements_file, python_interpreter=None, python_interpreter_target=None, extra_pip_args=None):
+def deps(mypy_requirements_file, python_interpreter = None, python_interpreter_target = None, extra_pip_args = None):
     """Pull in external dependencies needed by rules in this repo.
+
     Pull in all dependencies needed to run rules in this
     repository.
 

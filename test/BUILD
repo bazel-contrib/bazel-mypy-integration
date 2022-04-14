@@ -1,6 +1,6 @@
-package(default_testonly = 1)
-
 load("//:mypy.bzl", "mypy_test")
+
+package(default_testonly = 1)
 
 py_library(
     name = "empty_srcs_lib",
@@ -22,13 +22,19 @@ py_library(
 
 py_library(
     name = "correct_imported_mypy_typings",
-    srcs = [":correct_generated_mypy_typings", "correct_imported_typings.py"],
+    srcs = [
+        "correct_imported_typings.py",
+        ":correct_generated_mypy_typings",
+    ],
     srcs_version = "PY3",
 )
 
 py_library(
     name = "broken_imported_mypy_typings",
-    srcs = [":broken_generated_mypy_typings", "broken_imported_typings.py"],
+    srcs = [
+        "broken_imported_typings.py",
+        ":broken_generated_mypy_typings",
+    ],
     srcs_version = "PY3",
 )
 
@@ -60,21 +66,21 @@ mypy_test(
 genrule(
     name = "correct_generated_mypy_typings",
     outs = ["correct_generated.py"],
-    local = True,
     cmd =
         ("echo -e '" +
          "from typing import Callable\n\n" +
          "def thrice(i: int, next_: Callable[[int], int]) -> int:\n" +
          "   return next_(next_(next_(i)))\n' > $@"),
+    local = True,
 )
 
 genrule(
     name = "broken_generated_mypy_typings",
     outs = ["broken_generated.py"],
-    local = True,
     cmd =
         ("echo -e '" +
          "from typing import Callable\n\n" +
          "def thrice(i: int, next_: Callable[[int], int]) -> str:\n" +
          "   return next_(next_(next_(i)))\n' > $@"),
+    local = True,
 )
