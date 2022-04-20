@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   test:
@@ -17,8 +17,8 @@ jobs:
     - name: Setup Bazel
       uses: abhinavsingh/setup-bazel@v3
       with:
-        # Bazel version to install e.g. 1.2.1, 2.0.0, ...
-        version: 3.0.0 # optional, default is 2.0.0
+        # Must match version in repo's .bazelversion file.
+        version: 4.2.2
 
     - name: Run tests
       run: ./test.sh
