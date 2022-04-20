@@ -11,6 +11,12 @@ source "${dir}"/test_helper.sh
 
 runner=$(get_test_runner "${1:-local}")
 
+# Obviously doesn't test the integration's functionality, just the basics of repo's Bazel
+# workspace setup, a prerequisite to testing the integration's functionality.
+test_ok_running_bazel_version() {
+  action_should_succeed version
+}
+
 test_ok_on_valid_imported_mypy_typings() {
   action_should_succeed build --verbose_failures --aspects //:mypy.bzl%mypy_aspect --output_groups=mypy //test:correct_imported_mypy_typings
 }
@@ -57,6 +63,7 @@ test_fails_on_empty_mypy_test() {
 }
 
 main() {
+  $runner test_ok_running_bazel_version
   $runner test_ok_on_valid_mypy_typings
   $runner test_ok_for_package_roots_regression
   $runner test_ok_on_valid_imported_mypy_typings
