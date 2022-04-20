@@ -18,7 +18,7 @@ jobs:
       uses: abhinavsingh/setup-bazel@v3
       with:
         # Must match version in repo's .bazelversion file.
-        version: 4.2.2
+        version: 5.1.0
 
     - name: Run tests
       run: ./test.sh
