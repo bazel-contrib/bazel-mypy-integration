@@ -1,8 +1,11 @@
+"Public API"
+
 load("@bazel_skylib//lib:shell.bzl", "shell")
 load("@bazel_skylib//lib:sets.bzl", "sets")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 MyPyAspectInfo = provider(
+    "TODO: documentation",
     fields = {
         "exe": "Used to pass the rule implementation built exe back to calling aspect.",
         "out": "Used to pass the dummy output file back to calling aspect.",
@@ -31,7 +34,6 @@ DEFAULT_ATTRS = {
     ),
 }
 
-
 def _sources_to_cache_map_triples(srcs, is_aspect):
     triples_as_flat_list = []
     for f in srcs:
@@ -49,14 +51,11 @@ def _sources_to_cache_map_triples(srcs, is_aspect):
         ])
     return triples_as_flat_list
 
-
 def _is_external_dep(dep):
     return dep.label.workspace_root.startswith("external/")
 
-
 def _is_external_src(src_file):
     return src_file.path.startswith("external/")
-
 
 def _extract_srcs(srcs):
     direct_src_files = []
@@ -66,14 +65,12 @@ def _extract_srcs(srcs):
                 direct_src_files.append(f)
     return direct_src_files
 
-
 def _extract_transitive_deps(deps):
     transitive_deps = []
     for dep in deps:
         if MyPyStubsInfo not in dep and PyInfo in dep and not _is_external_dep(dep):
             transitive_deps.append(dep[PyInfo].transitive_sources)
     return transitive_deps
-
 
 def _extract_stub_deps(deps):
     # Need to add the .py files AND the .pyi files that are
@@ -87,20 +84,19 @@ def _extract_stub_deps(deps):
                         stub_files.append(src_f)
     return stub_files
 
-
 def _extract_imports(imports, label):
     # NOTE: Bazel's implementation of this for py_binary, py_test is at
     # src/main/java/com/google/devtools/build/lib/bazel/rules/python/BazelPythonSemantics.java
     mypypath_parts = []
     for import_ in imports:
         if import_.startswith("/"):
+            # buildifier: disable=print
             print("ignoring invalid absolute path '{}'".format(import_))
         elif import_ in ["", "."]:
             mypypath_parts.append(label.package)
         else:
             mypypath_parts.append("{}/{}".format(label.package, import_))
     return mypypath_parts
-
 
 def _mypy_rule_impl(ctx, is_aspect = False):
     base_rule = ctx
@@ -188,12 +184,11 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     if is_aspect:
         return [
             DefaultInfo(executable = exe, runfiles = runfiles),
-            MyPyAspectInfo(exe = exe, out = out)
+            MyPyAspectInfo(exe = exe, out = out),
         ]
     return DefaultInfo(executable = exe, runfiles = runfiles)
 
-
-def _mypy_aspect_impl(target, ctx):
+def _mypy_aspect_impl(_, ctx):
     if (ctx.rule.kind not in ["py_binary", "py_library", "py_test", "mypy_test"] or
         ctx.label.workspace_root.startswith("external")):
         return []
@@ -222,7 +217,6 @@ def _mypy_aspect_impl(target, ctx):
             mypy = depset([aspect_info.out]),
         ),
     ]
-
 
 def _mypy_test_impl(ctx):
     info = _mypy_rule_impl(ctx, is_aspect = False)

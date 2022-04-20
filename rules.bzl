@@ -1,4 +1,6 @@
+"mypy_stubs rule"
 MyPyStubsInfo = provider(
+    "TODO: docs",
     fields = {
         "srcs": ".pyi stub files",
     },

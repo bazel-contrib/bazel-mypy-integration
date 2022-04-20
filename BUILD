@@ -1,13 +1,20 @@
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
-
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_python//:version.bzl", "version")
 
+package(default_visibility = ["//visibility:private"])
+
 buildifier(
-    name = "buildifier",
+    name = "buildifier.check",
+    lint_mode = "warn",
+    mode = "diff",
 )
 
-package(default_visibility = ["//visibility:private"])
+buildifier(
+    name = "buildifier",
+    lint_mode = "fix",
+    mode = "fix",
+)
 
 licenses(["notice"])  # MIT
 
@@ -22,9 +29,9 @@ filegroup(
         "BUILD",
         "LICENSE",
         "config.bzl",
+        "current_mypy_version.txt",
         "mypy.bzl",
         "rules.bzl",
-        "current_mypy_version.txt",
         "//mypy:distribution",
         "//repositories:distribution",
         "//templates:distribution",

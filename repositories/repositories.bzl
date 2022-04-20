@@ -1,11 +1,8 @@
 """Rules to load all dependencies of this project."""
 
-load(
-    "@bazel_tools//tools/build_defs/repo:http.bzl",
-    "http_archive",
-    "http_file",
-)
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# buildifier: disable=function-docstring
 def repositories():
     excludes = native.existing_rules().keys()
 
