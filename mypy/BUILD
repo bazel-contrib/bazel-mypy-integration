@@ -10,9 +10,3 @@ py_binary(
         requirement("mypy"),
     ],
 )
-
-filegroup(
-    name = "distribution",
-    srcs = glob(["**"]),
-    visibility = ["//:__pkg__"],
-)

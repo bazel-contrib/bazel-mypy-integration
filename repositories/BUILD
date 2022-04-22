@@ -1,5 +1,0 @@
-filegroup(
-    name = "distribution",
-    srcs = glob(["**"]),
-    visibility = ["//:__pkg__"],
-)
