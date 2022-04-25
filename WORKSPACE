@@ -56,16 +56,3 @@ http_archive(
     strip_prefix = "buildtools-master",
     url = "https://github.com/bazelbuild/buildtools/archive/master.zip",
 )
-
-########################
-# OTHER
-########################
-
-http_archive(
-    name = "rules_pkg",
-    sha256 = "4ba8f4ab0ff85f2484287ab06c0d871dcb31cc54d439457d28fd4ae14b18450a",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
-    ],
-)
