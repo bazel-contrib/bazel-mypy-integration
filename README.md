@@ -24,7 +24,7 @@ With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` erro
 
 ## Aspect-based
 
-It's recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
+It's recommended that you register this integration's [Aspect](https://bazel.build/rules/aspects) to run
 everytime you `build` Python code. To do that you can add the following to your `.bazelrc`:
 
 ```
