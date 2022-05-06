@@ -13,12 +13,8 @@ jobs:
     steps:
     # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
     - uses: actions/checkout@v2
-
-    - name: Setup Bazel
-      uses: abhinavsingh/setup-bazel@v3
-      with:
-        # Must match version in repo's .bazelversion file.
-        version: 5.1.0
-
     - name: Run tests
       run: ./test.sh
+    - name: Check examples
+      working-directory: examples
+      run: bazel test //...
