@@ -8,15 +8,5 @@ py_binary(
     visibility = ["//visibility:public"],
     deps = [
         requirement("mypy"),
-        # Transitive deps determined by looking at: https://github.com/python/mypy/blob/master/mypy-requirements.txt
-        requirement("typing_extensions"),
-        requirement("mypy_extensions"),
-        requirement("typed_ast"),
     ],
-)
-
-filegroup(
-    name = "distribution",
-    srcs = glob(["**"]),
-    visibility = ["//:__pkg__"],
 )

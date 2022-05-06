@@ -24,7 +24,7 @@ With **`bazel-mypy-integration`**, type errors are flagged as `bazel build` erro
 
 ## Aspect-based
 
-It's recommended that you register this integration's [Aspect](https://docs.bazel.build/versions/master/skylark/aspects.html) to run
+It's recommended that you register this integration's [Aspect](https://bazel.build/rules/aspects) to run
 everytime you `build` Python code. To do that you can add the following to your `.bazelrc`:
 
 ```
@@ -84,36 +84,10 @@ mypy==0.790
 
 (In the [`examples/`](examples/) Bazel workspace this file is specified in [`tools/typing/`](examples/tools/typing))
 
-**2. Next, add the following to your `WORKSPACE`:**
+**2. Next, copy the `WORKSPACE` snippet**
 
-```python
-mypy_integration_version = "0.2.0"  # Latest @ 26th June 2021
-
-http_archive(
-    name = "mypy_integration",
-    sha256 = "621df076709dc72809add1f5fe187b213fee5f9b92e39eb33851ab13487bd67d",
-    strip_prefix = "bazel-mypy-integration-{version}".format(version = mypy_integration_version),
-    urls = [
-        "https://github.com/thundergolfer/bazel-mypy-integration/archive/refs/tags/{version}.tar.gz".format(version = mypy_integration_version),
-    ],
-)
-
-load(
-    "@mypy_integration//repositories:repositories.bzl",
-    mypy_integration_repositories = "repositories",
-)
-mypy_integration_repositories()
-
-load("@mypy_integration//:config.bzl", "mypy_configuration")
-# Optionally pass a MyPy config file, otherwise pass no argument.
-mypy_configuration("//tools/typing:mypy.ini")
-
-load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
-
-mypy_integration_deps(
-    mypy_requirements_file="//tools/typing:mypy_version.txt",
-)
-```
+This can be found in the [releases page](https://github.com/thundergolfer/bazel-mypy-integration/releases)
+for the release you use.
 
 _Note_ that by default `mypy_integration_deps` will default to passing `"python3"` as the interpreter used at install,
 but this can be overridden by setting `python_interpreter` or `python_interpreter_target` (but not both).

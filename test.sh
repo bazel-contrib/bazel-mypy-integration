@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
+#
+# Root test script that merely dispatches to other test running scripts.
 
-set -e
+set -euo pipefail
 
 test_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/test/shell
 
-. "${test_dir}"/test_mypy.sh
+echo "Running integration tests against repo's Bazel workspace..."
+# shellcheck source=/dev/null
+source "${test_dir}"/test_mypy.sh
