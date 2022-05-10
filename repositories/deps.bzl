@@ -4,7 +4,7 @@ Provides functions to pull all external package dependencies of this
 repository.
 """
 
-load(":py_repositories.bzl", "py_deps")
+load(":py_repositories.bzl", "py_deps", "mypy_deps")
 
 def deps(mypy_requirements_file, python_interpreter = None, python_interpreter_target = None, extra_pip_args = None):
     """Pull in external dependencies needed by rules in this repo.
@@ -16,4 +16,5 @@ def deps(mypy_requirements_file, python_interpreter = None, python_interpreter_t
     'repositories' in //repositories:repositories.bzl have been imported
     already.
     """
-    py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target, extra_pip_args)
+    # py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target, extra_pip_args)
+    mypy_deps(python_interpreter)

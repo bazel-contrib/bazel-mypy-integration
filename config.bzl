@@ -3,18 +3,18 @@ Provides functions to support (optionally) passing the MyPy configuration file
 to this integration.
 """
 
-def _create_config_impl(ctx):
-    if ctx.attr.config_filepath:
-        user_mypy_config_contents = ctx.read(ctx.attr.config_filepath)
+def _create_config_impl(rctx):
+    if rctx.attr.config_filepath:
+        user_mypy_config_contents = rctx.read(rctx.attr.config_filepath)
     else:
         user_mypy_config_contents = "[mypy]"
 
-    ctx.file(
+    rctx.file(
         "mypy.ini",
         content = user_mypy_config_contents,
         executable = False,
     )
-    ctx.file(
+    rctx.file(
         "BUILD",
         content = "exports_files(['mypy.ini'])",
         executable = False,

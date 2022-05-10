@@ -1,9 +1,31 @@
-# NOTE: Once recursive workspaces are implemented in Bazel, this file should cease to exist.
+# WORKSPACE support, to be replaced in the future with bzlmod.
 """
 Provides functions to pull the external Mypy package dependency.
 """
 
-load("@rules_python//python:pip.bzl", "pip_install")
+load("@rules_python//python:pip.bzl", "pip_install", "package_annotation", "pip_parse")
+
+PY_WHEEL_RULE_CONTENT = """\
+load("@aspect_rules_py//py:defs.bzl", "py_wheel")
+py_wheel(
+    name = "wheel",
+    src = ":whl",
+)
+"""
+
+def mypy_deps(interpreter):
+    PACKAGES = ["mypy", "typed-ast"]
+    ANNOTATIONS = {
+        pkg: package_annotation(additive_build_content = PY_WHEEL_RULE_CONTENT)
+        for pkg in PACKAGES
+    }
+
+    pip_parse(
+        name = "mypy_integration_pip_deps",
+        annotations = ANNOTATIONS,
+        python_interpreter_target = interpreter,
+        requirements_lock = "//:requirements-locked.txt",
+    )
 
 # buildifier: disable=function-docstring-args
 def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target, extra_pip_args):
