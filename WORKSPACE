@@ -12,9 +12,21 @@ load("//:config.bzl", "mypy_configuration")
 
 mypy_configuration()
 
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python3_8",
+    python_version = "3.8",
+)
+
+load("@python3_8//:defs.bzl", "interpreter")
+
 load("//repositories:deps.bzl", mypy_integration_deps = "deps")
 
-mypy_integration_deps("//:current_mypy_version.txt")
+mypy_integration_deps(
+    "//:current_mypy_version.txt",
+    python_interpreter = interpreter,
+)
 
 http_archive(
     name = "buildifier_prebuilt",
@@ -56,3 +68,11 @@ http_archive(
     strip_prefix = "buildtools-master",
     url = "https://github.com/bazelbuild/buildtools/archive/master.zip",
 )
+
+load("@aspect_rules_py//py:repositories.bzl", "rules_py_dependencies")
+
+rules_py_dependencies()
+
+load("@mypy_integration_pip_deps//:requirements.bzl", "install_deps")
+
+install_deps()

@@ -1,4 +1,5 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+load("@rules_python//python/pip_install:requirements.bzl", "compile_pip_requirements")
 
 package(default_visibility = ["//visibility:private"])
 
@@ -20,3 +21,9 @@ exports_files([
     "LICENSE",
     "version.bzl",
 ])
+
+compile_pip_requirements(
+    name = "requirements",
+    requirements_in = "current_mypy_version.txt",
+    requirements_txt = "requirements-locked.txt",
+)
