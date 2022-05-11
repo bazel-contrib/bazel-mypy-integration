@@ -3,7 +3,11 @@
 Provides functions to pull the external Mypy package dependency.
 """
 
-load("@rules_python//python:pip.bzl", "pip_install")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load("@rules_python//python:pip.bzl", _pip_install = "pip_install")
+
+def pip_install(name, **kwargs):
+    maybe(_pip_install, name = name, **kwargs)
 
 # buildifier: disable=function-docstring-args
 def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_target, extra_pip_args):
@@ -15,12 +19,11 @@ def py_deps(mypy_requirements_file, python_interpreter, python_interpreter_targe
     already.
     """
     external_repo_name = "mypy_integration_pip_deps"
-    excludes = native.existing_rules().keys()
-    if external_repo_name not in excludes:
-        pip_install(
-            name = external_repo_name,
-            requirements = mypy_requirements_file,
-            python_interpreter = python_interpreter or "python3",  # mypy requires Python3
-            python_interpreter_target = python_interpreter_target,
-            extra_pip_args = extra_pip_args,
-        )
+    
+    pip_install(
+        name = external_repo_name,
+        requirements = mypy_requirements_file,
+        python_interpreter = python_interpreter or "python3",  # mypy requires Python3
+        python_interpreter_target = python_interpreter_target,
+        extra_pip_args = extra_pip_args,
+    )

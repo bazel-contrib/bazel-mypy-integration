@@ -1,27 +1,30 @@
 """Rules to load all dependencies of this project."""
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", _http_archive = "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+
+def http_archive(name, **kwargs):
+    maybe(_http_archive, name = name, **kwargs)
+
+versions = struct(
+    bazel_skylib = "1.0.2",
+    rules_python = "0.8.1",
+)
 
 # buildifier: disable=function-docstring
 def repositories():
-    excludes = native.existing_rules().keys()
+    http_archive(
+        name = "rules_python",
+        sha256 = "29a801171f7ca190c543406f9894abf2d483c206e14d6acbd695623662320097",
+        strip_prefix = "rules_python-0.18.1",
+        url = "https://github.com/bazelbuild/rules_python/releases/download/0.18.1/rules_python-0.18.1.tar.gz",
+    )
 
-    rules_python_version = "0.1.0"
-
-    if "rules_python" not in excludes:
-        http_archive(
-            name = "rules_python",
-            url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
-            strip_prefix = "rules_python-{version}".format(version = rules_python_version),
-            sha256 = "48f7e716f4098b85296ad93f5a133baf712968c13fbc2fdf3a6136158fe86eac",
-        )
-
-    if "bazel_skylib" not in excludes:
-        http_archive(
-            name = "bazel_skylib",
-            urls = [
-                "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
-                "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
-            ],
-            sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
-        )
+    http_archive(
+        name = "bazel_skylib",
+        sha256 = "b8a1527901774180afc798aeb28c4634bdccf19c4d98e7bdd1ce79d1fe9aaad7",
+        urls = [
+            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.4.1/bazel-skylib-1.4.1.tar.gz",
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.1/bazel-skylib-1.4.1.tar.gz",
+        ],
+    )
