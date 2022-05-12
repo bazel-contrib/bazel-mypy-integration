@@ -1,2 +1,0 @@
-build --aspects //tools/linting:aspect.bzl%lint
-build --output_groups=+report
