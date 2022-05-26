@@ -32,6 +32,11 @@ create_config = repository_rule(
 )
 
 def mypy_configuration(mypy_config_file = None):
+    """**Deprecated**: Instead, see https://github.com/bazel-contrib/bazel-mypy-integration/blob/main/README.md#configuration
+
+    Args:
+        mypy_config_file (Label, optional): The label of a mypy configuration file
+    """
     create_config(
         name = "mypy_integration_config",
         config_filepath = mypy_config_file,

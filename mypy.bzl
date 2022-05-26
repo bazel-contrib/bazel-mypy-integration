@@ -29,7 +29,7 @@ DEFAULT_ATTRS = {
         cfg = "host",
     ),
     "_mypy_config": attr.label(
-        default = Label("@mypy_integration_config//:mypy.ini"),
+        default = Label("//:mypy_config"),
         allow_single_file = True,
     ),
 }
