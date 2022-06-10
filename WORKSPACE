@@ -8,10 +8,6 @@ load(
 
 mypy_integration_repositories()
 
-load("//:config.bzl", "mypy_configuration")
-
-mypy_configuration()
-
 load("//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps("//:current_mypy_version.txt")

@@ -124,16 +124,14 @@ mypy_test(
 ### Configuration
 
 To support the [MyPy configuration file](https://mypy.readthedocs.io/en/latest/config_file.html) you can add the
-following to your `WORKSPACE`:
+following to your `.bazelrc`:
 
-```
-load("@mypy_integration//:config.bzl", "mypy_configuration")
-
-mypy_configuration("//tools/typing:mypy.ini")
+```text
+build --@mypy_integration//:mypy_config=//:mypy.ini
 ```
 
-where `//tools/typing:mypy.ini` is a [valid MyPy config file](https://mypy.readthedocs.io/en/latest/config_file.html#config-file-format).
-
+where `//:mypy.ini` is a [valid MyPy config file](https://mypy.readthedocs.io/en/latest/config_file.html#config-file-format)
+within your projects workspace.
 
 ## 🛠 Development
 
