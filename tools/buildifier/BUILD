@@ -1,5 +1,7 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 
+package(default_visibility = ["//visibility:private"])
+
 buildifier(
     name = "buildifier.check",
     lint_mode = "warn",
