@@ -46,9 +46,3 @@ http_archive(
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
-
-http_archive(
-    name = "com_github_bazelbuild_buildtools",
-    strip_prefix = "buildtools-master",
-    url = "https://github.com/bazelbuild/buildtools/archive/master.zip",
-)
