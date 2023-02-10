@@ -5,8 +5,11 @@ set -o errexit -o nounset -o pipefail
 # Set by GH actions, see
 # https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 TAG=${GITHUB_REF_NAME}
+# The prefix is chosen to match what GitHub generates for source archives
 PREFIX="bazel-mypy-integration-${TAG}"
-SHA=$(git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip | shasum -a 256 | awk '{print $1}')
+ARCHIVE="bazel-mypy-integration-$TAG.tar.gz"
+git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip > $ARCHIVE
+SHA=$(shasum -a 256 $ARCHIVE | awk '{print $1}')
 
 cat << EOF
 WORKSPACE snippet:
@@ -17,7 +20,7 @@ http_archive(
     name = "mypy_integration",
     sha256 = "${SHA}",
     strip_prefix = "${PREFIX}",
-    url = "https://github.com/thundergolfer/bazel-mypy-integration/archive/refs/tags/${TAG}.tar.gz",
+    url = "https://github.com/thundergolfer/bazel-mypy-integration/releases/download/${TAG}/${ARCHIVE}",
 )
 
 load(
