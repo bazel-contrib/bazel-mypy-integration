@@ -20,7 +20,7 @@ http_archive(
     name = "mypy_integration",
     sha256 = "${SHA}",
     strip_prefix = "${PREFIX}",
-    url = "https://github.com/thundergolfer/bazel-mypy-integration/releases/download/${TAG}/${ARCHIVE}",
+    url = "https://github.com/bazel-contrib/bazel-mypy-integration/releases/download/${TAG}/${ARCHIVE}",
 )
 
 load(
