@@ -1,7 +1,6 @@
 
 
 import sys
-from typing import Tuple
 from mypy.main import main
 from mypy.version import __version__
 
@@ -9,7 +8,7 @@ from mypy.version import __version__
 # - Release versions have the form "0.NNN".
 # - Dev versions have the form "0.NNN+dev" (PLUS sign to conform to PEP 440).
 # - For 1.0 we'll switch back to 1.2.3 form.
-def version_tuple(v: str) -> Tuple[int, ...]:
+def version_tuple(v):
     """Silly method of creating a comparable version object"""
     return tuple(map(int, (v.split("+")[0].split("."))))
 
