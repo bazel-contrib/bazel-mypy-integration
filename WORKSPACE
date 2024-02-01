@@ -35,11 +35,11 @@ buildifier_prebuilt_register_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "14e8042b5da37652c92ef6a2759e7d2979d295f60afd7767825e3de68c856c54",
-    strip_prefix = "protobuf-3.18.0",
+    sha256 = "3c83e4301b968d0b4f29a0c29c0b3cde1da81d790ffd344b111c523ba1954392",
+    strip_prefix = "protobuf-3.25.2",
     urls = [
-        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.18.0.tar.gz",
-        "https://github.com/protocolbuffers/protobuf/archive/v3.18.0.tar.gz",
+        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.25.2.tar.gz",
+        "https://github.com/protocolbuffers/protobuf/archive/v3.25.2.tar.gz",
     ],
 )
 
