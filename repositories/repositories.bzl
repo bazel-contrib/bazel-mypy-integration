@@ -6,14 +6,14 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 def repositories():
     excludes = native.existing_rules().keys()
 
-    rules_python_version = "0.1.0"
+    rules_python_version = "0.12.0"
 
     if "rules_python" not in excludes:
         http_archive(
             name = "rules_python",
             url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
             strip_prefix = "rules_python-{version}".format(version = rules_python_version),
-            sha256 = "48f7e716f4098b85296ad93f5a133baf712968c13fbc2fdf3a6136158fe86eac",
+            sha256 = "b593d13bb43c94ce94b483c2858e53a9b811f6f10e1e0eedc61073bd90e58d9c",
         )
 
     if "bazel_skylib" not in excludes:
