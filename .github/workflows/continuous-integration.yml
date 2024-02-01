@@ -2,23 +2,23 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
-    - uses: actions/checkout@v2
+      # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
+      - uses: actions/checkout@v2
 
-    - name: Setup Bazel
-      uses: abhinavsingh/setup-bazel@v3
-      with:
-        # Must match version in repo's .bazelversion file.
-        version: 5.1.0
+      - name: Setup Bazel
+        uses: abhinavsingh/setup-bazel@v3
+        with:
+          # Must match version in repo's .bazelversion file.
+          version: 5.4.1
 
-    - name: Run tests
-      run: ./test.sh
+      - name: Run tests
+        run: ./test.sh
