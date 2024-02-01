@@ -14,10 +14,10 @@ mypy_integration_deps("//:current_mypy_version.txt")
 
 http_archive(
     name = "buildifier_prebuilt",
-    sha256 = "0450069a99db3d414eff738dd8ad4c0969928af13dc8614adbd1c603a835caad",
-    strip_prefix = "buildifier-prebuilt-0.4.0",
+    sha256 = "c0c8a5e6caf9a99b037e77ed7a5f17615d50881d0d93de3e85c014705f7914fd",
+    strip_prefix = "buildifier-prebuilt-0.4.1",
     urls = [
-        "http://github.com/keith/buildifier-prebuilt/archive/0.4.0.tar.gz",
+        "http://github.com/keith/buildifier-prebuilt/archive/0.4.1.tar.gz",
     ],
 )
 
