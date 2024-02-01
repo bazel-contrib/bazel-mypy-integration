@@ -42,6 +42,10 @@ test_ok_for_package_roots_regression() {
   action_should_succeed build --aspects //:mypy.bzl%mypy_aspect --output_groups=mypy //test/foo:foo
 }
 
+test_ok_buildifier() {
+  action_should_succeed run //tools/buildifier:buildifier.check
+}
+
 test_fails_on_broken_mypy_typings() {
   action_should_fail build --aspects //:mypy.bzl%mypy_aspect --output_groups=mypy //test:broken_mypy_typings
 }
@@ -70,6 +74,7 @@ main() {
   $runner test_ok_on_valid_imported_mypy_test
   $runner test_ok_on_valid_mypy_test
   $runner test_ok_on_empty_py_library
+  $runner test_ok_buildifier
 
   $runner test_fails_on_broken_imported_mypy_typings
   $runner test_fails_on_broken_imported_mypy_test

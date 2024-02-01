@@ -1,7 +1,7 @@
 "Public API"
 
-load("@bazel_skylib//lib:shell.bzl", "shell")
 load("@bazel_skylib//lib:sets.bzl", "sets")
+load("@bazel_skylib//lib:shell.bzl", "shell")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 MyPyAspectInfo = provider(
@@ -26,7 +26,7 @@ DEFAULT_ATTRS = {
     "_mypy_cli": attr.label(
         default = Label("//mypy"),
         executable = True,
-        cfg = "host",
+        cfg = "exec",
     ),
     "_mypy_config": attr.label(
         default = Label("//:mypy_config"),
