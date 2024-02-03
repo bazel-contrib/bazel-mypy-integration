@@ -72,7 +72,7 @@ If there's a typing error in your Python code, then the test will fail. Using `-
 
 ## Installation
 
-**1. Create a file that will specify the version of `mypy` to use.** You will pass the Bazel label for
+**1. Create a file (`tools/typing/mypy_version.txt` in the example below) that will specify the version of `mypy` to use.** You will pass the Bazel label for
 this file to the `deps()` function in `@mypy_integration//repositories:deps.bzl`, which below is named
 `mypy_integration_deps(...)`:
 
