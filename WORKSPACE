@@ -1,16 +1,28 @@
 workspace(name = "bazel_mypy_integration")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load(
-    "//repositories:repositories.bzl",
-    mypy_integration_repositories = "repositories",
-)
+load("//repositories:repositories.bzl", mypy_integration_repositories = "repositories")
 
 mypy_integration_repositories()
 
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python3_8",
+    python_version = "3.8",
+)
+
+load("@python3_8//:defs.bzl", python_interpreter = "interpreter")
 load("//repositories:deps.bzl", mypy_integration_deps = "deps")
 
-mypy_integration_deps("//:current_mypy_version.txt")
+mypy_integration_deps(
+    mypy_requirements_file = "//third_party:requirements.txt",
+    python_interpreter_target = python_interpreter,
+)
+
+load("@mypy_integration_pip_deps//:requirements.bzl", install_mypy_deps = "install_deps")
+
+install_mypy_deps()
 
 http_archive(
     name = "buildifier_prebuilt",
