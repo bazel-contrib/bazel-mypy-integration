@@ -1,0 +1,1 @@
+build --@mypy_integration//:mypy=//tools/typing:mypy

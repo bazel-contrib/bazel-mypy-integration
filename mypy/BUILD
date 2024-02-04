@@ -1,5 +1,3 @@
-load("@mypy_integration_pip_deps//:requirements.bzl", "requirement")
-
 py_binary(
     name = "mypy",
     srcs = ["main.py"],
@@ -7,6 +5,6 @@ py_binary(
     python_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
-        requirement("mypy"),
+        "//:mypy",
     ],
 )

@@ -13,11 +13,12 @@ python_register_toolchains(
 )
 
 load("@python3_8//:defs.bzl", python_interpreter = "interpreter")
-load("//repositories:deps.bzl", mypy_integration_deps = "deps")
+load("@rules_python//python:pip.bzl", "pip_parse")
 
-mypy_integration_deps(
-    mypy_requirements_file = "//third_party:requirements.txt",
+pip_parse(
+    name = "mypy_integration_pip_deps",
     python_interpreter_target = python_interpreter,
+    requirements = "//third_party:requirements.txt",
 )
 
 load("@mypy_integration_pip_deps//:requirements.bzl", install_mypy_deps = "install_deps")
