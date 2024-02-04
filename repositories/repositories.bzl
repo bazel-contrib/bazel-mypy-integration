@@ -5,13 +5,11 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 # buildifier: disable=function-docstring
 def repositories():
-    rules_python_version = "0.12.0"
-
     maybe(
         http_archive,
         name = "rules_python",
-        url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
-        strip_prefix = "rules_python-{version}".format(version = rules_python_version),
+        url = "https://github.com/bazelbuild/rules_python/archive/0.12.0.tar.gz",
+        strip_prefix = "rules_python-0.12.0",
         sha256 = "b593d13bb43c94ce94b483c2858e53a9b811f6f10e1e0eedc61073bd90e58d9c",
     )
 
