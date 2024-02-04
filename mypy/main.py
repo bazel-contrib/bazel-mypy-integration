@@ -1,9 +1,12 @@
-
-
 import sys
 from typing import Tuple
-from mypy.main import main
-from mypy.version import __version__
+try:
+    from mypy.main import main
+    from mypy.version import __version__
+except:
+    print("Could not import mypy.")
+    print("Did you provide the library via '--@mypy_integration//:mypy=...'? For more details see the README.")
+    sys.exit(1)
 
 # According to https://github.com/python/mypy/blob/v0.971/mypy/version.py
 # - Release versions have the form "0.NNN".

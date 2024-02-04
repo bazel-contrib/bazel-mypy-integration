@@ -1,5 +1,3 @@
-load("@mypy_integration_pip_deps//:requirements.bzl", "requirement")
-
 package(default_visibility = ["//visibility:private"])
 
 licenses(["notice"])  # MIT
@@ -18,6 +16,7 @@ label_flag(
 
 label_flag(
     name = "mypy",
-    build_setting_default = requirement("mypy"),
+    # No usable default. Force users to inject mypy.
+    build_setting_default = "//tools:empty_library",
     visibility = ["//visibility:public"],
 )
