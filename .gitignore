@@ -109,6 +109,8 @@ bazel-*
 
 # Intellij
 .idea
+# CLion Bazel plugin
+.clwb
 # Libraries and modules are generated from Bazel, so only code style,
 # inspection profiles etc are checked in.
 **/.idea/.name
