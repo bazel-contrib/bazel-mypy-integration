@@ -46,7 +46,7 @@ load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
     name = "my_deps",
     python_interpreter_target = python_interpreter,
-    requirements = "//third_party:requirements.txt",
+    requirements_lock = "//third_party:requirements.txt",
 )
 
 load("@my_deps//:requirements.bzl", install_my_deps = "install_deps")
@@ -56,7 +56,7 @@ install_my_deps()
 pip_parse(
     name = "my_mypy_deps",
     python_interpreter_target = python_interpreter,
-    requirements = "//tools/typing:mypy_requirements.txt",
+    requirements_lock = "//tools/typing:mypy_requirements.txt",
 )
 
 load("@my_mypy_deps//:requirements.bzl", install_my_pypy_deps = "install_deps")

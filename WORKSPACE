@@ -5,7 +5,9 @@ load("//repositories:repositories.bzl", mypy_integration_repositories = "reposit
 
 mypy_integration_repositories()
 
-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+
+py_repositories()
 
 python_register_toolchains(
     name = "python3_8",
@@ -18,7 +20,7 @@ load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
     name = "mypy_integration_pip_deps",
     python_interpreter_target = python_interpreter,
-    requirements = "//third_party:requirements.txt",
+    requirements_lock = "//third_party:requirements.txt",
 )
 
 load("@mypy_integration_pip_deps//:requirements.bzl", install_mypy_deps = "install_deps")
