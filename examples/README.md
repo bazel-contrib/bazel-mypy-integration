@@ -12,5 +12,5 @@ bazel build \
      --output_groups=mypy //...
 ```
 
-This workspace defines its **MyPy version** in [`//tools/typing:mypy_version.txt`](./tools/typing/mypy_version.txt)
+This workspace defines its **MyPy version** in [`//tools/typing:mypy_requirements.txt`](./tools/typing/mypy_requirements.txt)
 and its **MyPy config** in [`//tools/typing:mypy.ini`](./tools/typing/mypy.ini).

@@ -13,3 +13,10 @@ label_flag(
     build_setting_default = "//:.mypy.ini",
     visibility = ["//visibility:public"],
 )
+
+label_flag(
+    name = "mypy",
+    # No usable default. Force users to inject mypy.
+    build_setting_default = "//tools:empty_library",
+    visibility = ["//visibility:public"],
+)

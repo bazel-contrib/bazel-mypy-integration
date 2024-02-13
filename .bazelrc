@@ -1,0 +1,1 @@
+build --//:mypy=//third_party:mypy
