@@ -73,7 +73,7 @@ If there's a typing error in your Python code, then the test will fail. Using `-
 ## Installation
 
 `mypy_integration` expects the user to provide the `mypy` dependency.
-Given not every mypy version is compatible to all Python versions and mypy's transitive dependencies can differ based on the Python version `mypy_integration` cannot offer a `mypy` which satisfies all potential users.
+Given not every mypy version is compatible to all Python versions and mypy's transitive dependencies can differ based on the Python version, `mypy_integration` cannot offer a `mypy` which satisfies all potential users.
 
 **1. Provide `mypy` to `mypy_integration`. You can do so in 2 ways**:
   - Add to your Bazel command `--@mypy_integration//:mypy=<your_target_providing_mypy>`
