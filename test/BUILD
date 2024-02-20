@@ -45,6 +45,7 @@ mypy_test(
 
 mypy_test(
     name = "broken_mypy_test",
+    tags = ["manual"],
     deps = [":broken_mypy_typings"],
 )
 
@@ -60,6 +61,7 @@ mypy_test(
 
 mypy_test(
     name = "broken_imported_mypy_test",
+    tags = ["manual"],
     deps = [":broken_imported_mypy_typings"],
 )
 
