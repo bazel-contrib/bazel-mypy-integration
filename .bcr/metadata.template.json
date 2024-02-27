@@ -1,0 +1,18 @@
+{
+  "homepage": "https://github.com/bazel-contrib/bazel-mypy-integration",
+  "maintainers": [
+    {
+      "email": "nikolaus.wittenstein@gmail.com",
+      "github": "adzenith",
+      "name": "Nikolaus Wittenstein"
+    },
+    {
+      "email": "alex@aspect.dev",
+      "github": "alexeagle",
+      "name": "Alex Eagle"
+    }
+  ],
+  "repository": ["github:bazel-contrib/bazel-mypy-integration"],
+  "versions": [],
+  "yanked_versions": {}
+}
