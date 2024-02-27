@@ -9,10 +9,17 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        bzlmodEnabled: [true, false]
 
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v4
+      - uses: p0deje/setup-bazel@0.6.0
+        with:
+          bazelrc: common --announce_rc --color=yes --enable_bzlmod=${{ matrix.bzlmodEnabled }}
       - name: Run tests
         run: bazel test //...
       - name: Run integration tests
