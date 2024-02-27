@@ -28,8 +28,8 @@ pip = use_extension(
     dev_dependency = True,
 )
 pip.parse(
-    hub_name = "pypi",
+    hub_name = "mypy_integration_pip_deps",
     python_version = "3.8",
     requirements_lock = "//third_party:requirements.txt",
 )
-use_repo(pip, "pypi")
+use_repo(pip, "mypy_integration_pip_deps")
