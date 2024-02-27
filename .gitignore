@@ -1,3 +1,6 @@
+# Remove after the lockfile format is more stable
+MODULE.bazel.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
