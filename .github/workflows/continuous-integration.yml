@@ -13,6 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         bzlmodEnabled: [true, false]
+        folder: [".", "examples"]
+        exclude:
+          # No point keeping the root workspace compatible with --noenable_bzlmod
+          - folder: "."
+            bzlmodEnabled: false
+    defaults:
+      run:
+        working-directory: ${{ matrix.folder }}
 
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
@@ -22,5 +30,10 @@ jobs:
           bazelrc: common --announce_rc --color=yes --enable_bzlmod=${{ matrix.bzlmodEnabled }}
       - name: Run tests
         run: bazel test //...
+
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Run integration tests
         run: ./test.sh

@@ -1,0 +1,32 @@
+"Bazel dependencies, used under --enable_bzlmod"
+
+module(
+    name = "mypy-integration-examples",
+    version = "0.0.0",
+    compatibility_level = 1,
+)
+
+bazel_dep(name = "mypy_integration", version = "0.0.0")
+bazel_dep(name = "rules_java", version = "7.4.0")
+bazel_dep(name = "rules_python", version = "0.27.1")
+
+local_path_override(
+    module_name = "mypy_integration",
+    path = "..",
+)
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(python_version = "3.8")
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "my_deps",
+    python_version = "3.8",
+    requirements_lock = "//third_party:requirements.txt",
+)
+pip.parse(
+    hub_name = "my_mypy_deps",
+    python_version = "3.8",
+    requirements_lock = "//tools/typing:mypy_requirements.txt",
+)
+use_repo(pip, "my_deps", "my_mypy_deps")

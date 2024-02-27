@@ -1,0 +1,35 @@
+"Bazel dependencies under bzlmod"
+
+module(
+    name = "mypy_integration",
+    # Replaced with the tag during BCR publishing
+    version = "0.0.0",
+    compatibility_level = 1,
+)
+
+# Lower-bound dependency versions.
+# Only increase these when needed, otherwise users get warnings from Bazel about how the selected
+# version is greater than the one they specified.
+bazel_dep(name = "rules_python", version = "0.27.1")
+bazel_dep(name = "bazel_skylib", version = "1.5.0")
+
+bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
+
+python = use_extension(
+    "@rules_python//python/extensions:python.bzl",
+    "python",
+    dev_dependency = True,
+)
+python.toolchain(python_version = "3.8")
+
+pip = use_extension(
+    "@rules_python//python/extensions:pip.bzl",
+    "pip",
+    dev_dependency = True,
+)
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.8",
+    requirements_lock = "//third_party:requirements.txt",
+)
+use_repo(pip, "pypi")

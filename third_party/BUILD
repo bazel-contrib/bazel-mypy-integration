@@ -1,4 +1,4 @@
-load("@mypy_integration_pip_deps//:requirements.bzl", "requirement")
+load("@pypi//:requirements.bzl", "requirement")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 alias(
