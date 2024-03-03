@@ -15,18 +15,14 @@ load("@mypy_integration//repositories:repositories.bzl", mypy_integration_reposi
 
 mypy_integration_repositories()
 
-load("@mypy_integration//:config.bzl", "mypy_configuration")
-
-mypy_configuration("//tools/typing:mypy.ini")
-
 ########################
 # PYTHON SUPPORT
 ########################
-rules_python_version = "5c948dcfd4ca79c2ed3a87636c46abba9f5836e9"
+rules_python_version = "0.27.1"
 
 http_archive(
     name = "rules_python",
-    sha256 = "76e817a5e540f4c8a8b5e1de1e7afee6dfa42d78112a3694244450287ac20ebb",
+    sha256 = "e85ae30de33625a63eca7fc40a94fea845e641888e52f32b6beea91e8b1b2793",
     strip_prefix = "rules_python-{version}".format(version = rules_python_version),
     url = "https://github.com/bazelbuild/rules_python/archive/{version}.tar.gz".format(version = rules_python_version),
 )

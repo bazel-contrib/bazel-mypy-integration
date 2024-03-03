@@ -1,2 +1,3 @@
 build --@mypy_integration//:mypy=//tools/typing:mypy
+build --@mypy_integration//:mypy_config=//tools/typing:mypy.ini
 common --java_runtime_version=remotejdk_11
