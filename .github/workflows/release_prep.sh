@@ -29,10 +29,6 @@ load(
 )
 mypy_integration_repositories()
 
-load("@mypy_integration//:config.bzl", "mypy_configuration")
-# Optionally pass a MyPy config file, otherwise pass no argument.
-mypy_configuration("//tools/typing:mypy.ini")
-
 load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps(
