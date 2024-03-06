@@ -25,7 +25,7 @@ jobs:
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v4
-      - uses: p0deje/setup-bazel@0.7.1
+      - uses: p0deje/setup-bazel@0.8.0
         with:
           bazelrc: common --announce_rc --color=yes --enable_bzlmod=${{ matrix.bzlmodEnabled }}
       - name: Run tests
