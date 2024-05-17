@@ -7,7 +7,7 @@ module(
 )
 
 bazel_dep(name = "mypy_integration", version = "0.0.0")
-bazel_dep(name = "rules_java", version = "7.6.0")
+bazel_dep(name = "rules_java", version = "7.6.1")
 bazel_dep(name = "rules_python", version = "0.27.1")
 
 local_path_override(
