@@ -17,6 +17,8 @@ main() {
   mypy="{MYPY_EXE}"
 
   # TODO(Jonathon): Consider UX improvements using https://mypy.readthedocs.io/en/stable/command_line.html#configuring-error-messages
+  export PYTHONPATH="{PYTHONPATH}"
+  echo $PYTHONPATH
 
   export MYPYPATH="$(pwd):{MYPYPATH_PATH}"
 

@@ -14,7 +14,7 @@ MyPyAspectInfo = provider(
 
 # Switch to True only during debugging and development.
 # All releases should have this as False.
-DEBUG = False
+DEBUG = True
 
 VALID_EXTENSIONS = ["py", "pyi"]
 
@@ -72,16 +72,38 @@ def _extract_transitive_deps(deps):
             transitive_deps.append(dep[PyInfo].transitive_sources)
     return transitive_deps
 
+def _extract_transitive_inputs(deps):
+    input_depsets = []
+    for dep in deps:
+        # # Supply the --cache-map files from transitives
+        # if MypyInfo in dep:
+        #     input_depsets.append(dep[MypyInfo].transitive_cache_map)
+
+        # TODO: relies on PyInfo being a Bazel global symbol.
+        # When https://github.com/bazelbuild/rules_python/issues/1645 is fixed we can flip that flag to keep us honest.
+        if PyInfo in dep:
+            # TODO: maybe we can avoid passing .py source files when the cache-map files were found?
+            input_depsets.append(dep[PyInfo].transitive_sources)
+
+            # rules_python puts .pyi files into the data attribute of a py_library
+            # so the transitive_sources is not sufficient.
+            # TODO: should we change rules_python to pass .pyi files in some provider?
+            if dep.label.workspace_root.startswith("external/"):
+                input_depsets.append(dep[DefaultInfo].default_runfiles.files)
+    return input_depsets
+
 def _extract_stub_deps(deps):
     # Need to add the .py files AND the .pyi files that are
     # deps of the rule
     stub_files = []
+    print('deps', deps)
     for dep in deps:
         if MyPyStubsInfo in dep:
             for stub_srcs_target in dep[MyPyStubsInfo].srcs:
                 for src_f in stub_srcs_target.files.to_list():
                     if src_f.extension == "pyi":
                         stub_files.append(src_f)
+    print('stub_files', stub_files)
     return stub_files
 
 def _extract_imports(imports, label):
@@ -113,9 +135,12 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     if hasattr(base_rule.attr, "srcs"):
         direct_src_files = _extract_srcs(base_rule.attr.srcs)
 
+    transitive_imports = depset()
     if hasattr(base_rule.attr, "deps"):
         transitive_srcs_depsets = _extract_transitive_deps(base_rule.attr.deps)
         stub_files = _extract_stub_deps(base_rule.attr.deps)
+        transitive_imports = depset(transitive = [dep[PyInfo].imports for dep in base_rule.attr.deps if PyInfo in dep])
+        print('transitive_imports', transitive_imports)
 
     if hasattr(base_rule.attr, "imports"):
         mypypath_parts = _extract_imports(base_rule.attr.imports, ctx.label)
@@ -128,6 +153,7 @@ def _mypy_rule_impl(ctx, is_aspect = False):
 
     mypypath_parts += [src_f.dirname for src_f in stub_files]
     mypypath = ":".join(mypypath_parts)
+    print('mypypath', mypypath)
 
     # Ideally, a file should be passed into this rule. If this is an executable
     # rule, then we default to the implicit executable file, otherwise we create
@@ -149,7 +175,11 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     # Compose a list of the files needed for use. Note that aspect rules can use
     # the project version of mypy however, other rules should fall back on their
     # relative runfiles.
-    runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file])
+    transitive_files = depset(transitive=_extract_transitive_inputs(base_rule.attr.deps))
+    print('transitive_files', transitive_files)
+    runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file], transitive_files = transitive_files)
+    # runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file], transitive_files = transitive_files)
+    # runfiles = runfiles.merge(transitive_imports)
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
@@ -157,10 +187,13 @@ def _mypy_rule_impl(ctx, is_aspect = False):
         sets.make([f.root.path for f in src_files]),
     )
 
+    print('src_root_paths', src_root_paths)
+
     ctx.actions.expand_template(
         template = ctx.file._template,
         output = exe,
         substitutions = {
+            "{PYTHONPATH}": ":".join(["external/" + t for t in transitive_imports.to_list()]),
             "{MYPY_EXE}": ctx.executable._mypy_cli.path,
             "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files, is_aspect)),
