@@ -96,14 +96,12 @@ def _extract_stub_deps(deps):
     # Need to add the .py files AND the .pyi files that are
     # deps of the rule
     stub_files = []
-    print('deps', deps)
     for dep in deps:
         if MyPyStubsInfo in dep:
             for stub_srcs_target in dep[MyPyStubsInfo].srcs:
                 for src_f in stub_srcs_target.files.to_list():
                     if src_f.extension == "pyi":
                         stub_files.append(src_f)
-    print('stub_files', stub_files)
     return stub_files
 
 def _extract_imports(imports, label):
