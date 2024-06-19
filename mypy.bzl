@@ -14,7 +14,7 @@ MyPyAspectInfo = provider(
 
 # Switch to True only during debugging and development.
 # All releases should have this as False.
-DEBUG = True
+DEBUG = False
 
 VALID_EXTENSIONS = ["py", "pyi"]
 
@@ -140,7 +140,6 @@ def _mypy_rule_impl(ctx, is_aspect = False):
         transitive_srcs_depsets = _extract_transitive_deps(base_rule.attr.deps)
         stub_files = _extract_stub_deps(base_rule.attr.deps)
         transitive_imports = depset(transitive = [dep[PyInfo].imports for dep in base_rule.attr.deps if PyInfo in dep])
-        print('transitive_imports', transitive_imports)
 
     if hasattr(base_rule.attr, "imports"):
         mypypath_parts = _extract_imports(base_rule.attr.imports, ctx.label)
@@ -153,7 +152,6 @@ def _mypy_rule_impl(ctx, is_aspect = False):
 
     mypypath_parts += [src_f.dirname for src_f in stub_files]
     mypypath = ":".join(mypypath_parts)
-    print('mypypath', mypypath)
 
     # Ideally, a file should be passed into this rule. If this is an executable
     # rule, then we default to the implicit executable file, otherwise we create
@@ -176,18 +174,13 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     # the project version of mypy however, other rules should fall back on their
     # relative runfiles.
     transitive_files = depset(transitive=_extract_transitive_inputs(base_rule.attr.deps))
-    print('transitive_files', transitive_files)
     runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file], transitive_files = transitive_files)
-    # runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file], transitive_files = transitive_files)
-    # runfiles = runfiles.merge(transitive_imports)
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
 
     src_root_paths = sets.to_list(
         sets.make([f.root.path for f in src_files]),
     )
-
-    print('src_root_paths', src_root_paths)
 
     ctx.actions.expand_template(
         template = ctx.file._template,
