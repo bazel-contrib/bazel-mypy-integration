@@ -170,7 +170,7 @@ def _mypy_rule_impl(ctx, is_aspect = False):
     # Compose a list of the files needed for use. Note that aspect rules can use
     # the project version of mypy however, other rules should fall back on their
     # relative runfiles.
-    transitive_files = depset(transitive=_extract_transitive_inputs(base_rule.attr.deps))
+    transitive_files = depset(transitive = _extract_transitive_inputs(base_rule.attr.deps))
     runfiles = ctx.runfiles(files = src_files + stub_files + [mypy_config_file], transitive_files = transitive_files)
     if not is_aspect:
         runfiles = runfiles.merge(ctx.attr._mypy_cli.default_runfiles)
