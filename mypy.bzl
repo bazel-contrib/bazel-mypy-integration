@@ -87,9 +87,8 @@ def _extract_transitive_inputs(deps):
 
             # rules_python puts .pyi files into the data attribute of a py_library
             # so the transitive_sources is not sufficient.
-            # TODO: should we change rules_python to pass .pyi files in some provider?
-            if dep.label.workspace_root.startswith("external/"):
-                input_depsets.append(dep[DefaultInfo].default_runfiles.files)
+            # This also allows finding `py.typed` files in transitive deps to know that they are typed packages.
+            input_depsets.append(dep[DefaultInfo].default_runfiles.files)
     return input_depsets
 
 def _extract_stub_deps(deps):
