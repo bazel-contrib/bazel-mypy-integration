@@ -7,7 +7,7 @@ from typing import Iterator
 def iter_primes() -> Iterator[int]:
     # An iterator of all numbers between 2 and
     # +infinity
-    numbers = itertools.count(2)
+    numbers: Iterator[int] = itertools.count(2)
 
     # Generate primes forever
     while True:
