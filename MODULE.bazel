@@ -4,7 +4,6 @@ module(
     name = "mypy_integration",
     # Replaced with the tag during BCR publishing
     version = "0.0.0",
-    compatibility_level = 1,
 )
 
 # Lower-bound dependency versions.

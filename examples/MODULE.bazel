@@ -3,7 +3,6 @@
 module(
     name = "mypy-integration-examples",
     version = "0.0.0",
-    compatibility_level = 1,
 )
 
 bazel_dep(name = "mypy_integration", version = "0.0.0")

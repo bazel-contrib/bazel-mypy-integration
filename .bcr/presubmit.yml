@@ -1,11 +1,20 @@
 bcr_test_module:
-  module_path: "examples"
+  module_path: ""
   matrix:
     platform: ["debian10", "macos", "ubuntu2004", "windows"]
-    bazel: ["7.x", "6.x"]
+    bazel: ["6.x", "7.x", "rolling"]
   tasks:
     run_tests:
-      name: "Run test module"
+      name: "Run module tests"
+      platform: ${{ platform }}
+      bazel: ${{ bazel }}
+      test_targets:
+        - "//..."
+      shell_commands:
+        - ./test.sh
+    test_examples:
+      name: "Run example tests"
+      working_directory: examples
       platform: ${{ platform }}
       bazel: ${{ bazel }}
       test_targets:
