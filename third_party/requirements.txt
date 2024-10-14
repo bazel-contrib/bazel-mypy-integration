@@ -4,7 +4,7 @@
 #
 #    bazel run //third_party:requirements.update
 #
-mypy==0.790 \
+mypy==1.12.0 \
     --hash=sha256:0a0d102247c16ce93c97066443d11e2d36e6cc2a32d8ccc1f705268970479324 \
     --hash=sha256:0d34d6b122597d48a36d6c59e35341f410d4abfa771d96d04ae2c468dd201abc \
     --hash=sha256:2170492030f6faa537647d29945786d297e4862765f0b4ac5930ff62e300d802 \
