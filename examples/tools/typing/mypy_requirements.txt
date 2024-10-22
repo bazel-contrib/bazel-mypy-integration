@@ -4,7 +4,7 @@
 #
 #    bazel run //tools/typing:requirements.update
 #
-mypy==0.750 \
+mypy==1.13.0 \
     --hash=sha256:02d9bdd3398b636723ecb6c5cfe9773025a9ab7f34612c1cde5c7f2292e2d768 \
     --hash=sha256:088f758a50af31cf8b42688118077292370c90c89232c783ba7979f39ea16646 \
     --hash=sha256:28e9fbc96d13397a7ddb7fad7b14f373f91b5cff538e0772e77c270468df083c \
