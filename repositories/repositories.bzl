@@ -8,9 +8,9 @@ def repositories():
     maybe(
         http_archive,
         name = "rules_python",
-        url = "https://github.com/bazelbuild/rules_python/archive/0.27.1.tar.gz",
-        strip_prefix = "rules_python-0.27.1",
-        sha256 = "e85ae30de33625a63eca7fc40a94fea845e641888e52f32b6beea91e8b1b2793",
+        url = "https://github.com/bazelbuild/rules_python/archive/0.37.1.tar.gz",
+        strip_prefix = "rules_python-0.37.1",
+        sha256 = "bd4797821b72b80b69e3c5ab4ad037e7fd1e6a0a27aebf42424c7ab0ce32e254",
     )
 
     maybe(
