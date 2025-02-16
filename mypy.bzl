@@ -161,8 +161,8 @@ def _mypy_rule_impl(ctx, is_aspect = False):
         template = ctx.file._template,
         output = exe,
         substitutions = {
-            "{MYPY_EXE}": ctx.executable._mypy_cli.path,
-            "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path,
+            "{MYPY_EXE}": ctx.executable._mypy_cli.path.replace("external", "..", 1),
+            "{MYPY_ROOT}": ctx.executable._mypy_cli.root.path.replace("external", "..", 1),
             "{CACHE_MAP_TRIPLES}": " ".join(_sources_to_cache_map_triples(src_files, is_aspect)),
             "{PACKAGE_ROOTS}": " ".join([
                 "--package-root " + shell.quote(path or ".")
@@ -176,7 +176,7 @@ def _mypy_rule_impl(ctx, is_aspect = False):
             "{VERBOSE_BASH}": "set -x" if DEBUG else "",
             "{OUTPUT}": out.path if out else "",
             "{MYPYPATH_PATH}": mypypath if mypypath else "",
-            "{MYPY_INI_PATH}": mypy_config_file.path,
+            "{MYPY_INI_PATH}": mypy_config_file.path.replace("external", "..", 1),
         },
         is_executable = True,
     )
