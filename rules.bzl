@@ -1,4 +1,7 @@
 "mypy_stubs rule"
+
+load("@rules_python//python:defs.bzl", "PyInfo")
+
 MyPyStubsInfo = provider(
     "TODO: docs",
     fields = {

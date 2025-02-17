@@ -2,6 +2,7 @@
 
 load("@bazel_skylib//lib:sets.bzl", "sets")
 load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@rules_python//python:defs.bzl", "PyInfo")
 load("//:rules.bzl", "MyPyStubsInfo")
 
 MyPyAspectInfo = provider(
