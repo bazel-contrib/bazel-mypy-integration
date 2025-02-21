@@ -20,7 +20,7 @@ jobs:
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v4
-      - uses: p0deje/setup-bazel@0.9.0
+      - uses: p0deje/setup-bazel@0.14.0
         with:
           bazelrc: common --announce_rc --color=yes
       - name: Run tests
