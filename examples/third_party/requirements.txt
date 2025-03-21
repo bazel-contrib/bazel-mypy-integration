@@ -4,6 +4,7 @@
 #
 #    bazel run //third_party:requirements.update
 #
-parse==1.12.1 \
-    --hash=sha256:a5fca7000c6588d77bc65c28f3f21bfce03b5e44daa8f9f07c17fe364990d717
+parse==1.20.2 \
+    --hash=sha256:967095588cb802add9177d0c0b6133b5ba33b1ea9007ca800e526f42a85af558 \
+    --hash=sha256:b41d604d16503c79d81af5165155c0b20f6c8d6c559efa66b4b695c3e5a0a0ce
     # via -r third_party/requirements.in
